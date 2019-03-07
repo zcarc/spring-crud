@@ -37,6 +37,8 @@ dependencies {
     compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.0.7.RELEASE'
     compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.0.7.RELEASE'
 
+    // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
 
 
