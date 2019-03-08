@@ -7,6 +7,7 @@
 
     <bean id="customAccessDenied" class="com.wrkbr.security.CustomAccessDeniedHandler" />
     <bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+    <bean id="customUserDetailService" class="com.wrkbr.security.CustomUserDetailService" />
 
     <security:http>
 
@@ -20,17 +21,17 @@
 
         <security:logout logout-url="/customLogout" invalidate-session="true" />
 
+
     </security:http>
 
 
     <security:authentication-manager>
 
-        <security:authentication-provider>
+        <security:authentication-provider user-service-ref="customUserDetailService">
 
-            <security:user-service>
-                <security:user name="member" password="{noop}member" authorities="ROLE_MEMBER" />
-                <security:user name="admin" password="{noop}admin" authorities="ROLE_MEMBER, ROLE_ADMIN" />
-            </security:user-service>
+
+            <security:password-encoder ref="bcryptPasswordEncoder" />
+
 
         </security:authentication-provider>
 

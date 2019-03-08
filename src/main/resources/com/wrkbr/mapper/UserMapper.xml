@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wrkbr.mapper.UserMapper">
+
+
+    <resultMap id="userMap" type="com.wrkbr.domain.UserVO">
+        <id property="userid" column="userid" />
+        <result property="userpw" column="userpw" />
+        <result property="username" column="username" />
+        <result property="userGender" column="userGender" />
+        <result property="userPhone" column="userPhone" />
+        <result property="userEmail" column="userEmail" />
+        <result property="userEmailHash" column="userEmailHash" />
+        <result property="userEmailChecked" column="userEmailChecked" />
+        <result property="userRegDate" column="userRegDate" />
+        <result property="userUpdateDate" column="userUpdateDate" />
+        <result property="enabled" column="enabled" />
+        <collection property="authList" resultMap="authMap" />
+    </resultMap>
+
+    <resultMap id="authMap" type="com.wrkbr.domain.UserAuthVO">
+        <result property="userid" column="userid" />
+        <result property="auth" column="auth" />
+    </resultMap>
+
+    <select id="read" resultMap="userMap">
+        <![CDATA[
+          select user.userid, userpw, username, userRegDate, userUpdateDate, enabled, auth.auth
+          from user_table user
+          left join user_table_auth auth
+          on user.userid = auth.userid
+          where user.userid = #{userid};
+        ]]>
+
+    </select>
+
+</mapper>

@@ -50,6 +50,28 @@ public class UserTest {
 
 
     @Test
+    public void tesUpdate(){
+
+        String sql = "update user_table set userpw = ? where userid = ?";
+
+        try(Connection con = ds.getConnection();
+            PreparedStatement pstmt = con.prepareStatement(sql)){
+
+            pstmt.setString(1, pwEncoder.encode("pw" + 90));
+            pstmt.setString(2, "test01");
+
+            int result = pstmt.executeUpdate();
+            log.info("result: " + result);
+
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    @Test
     public void testInsertAuth(){
 
         String sql = "insert into user_table_auth(userid, auth) values(?, ?)";
