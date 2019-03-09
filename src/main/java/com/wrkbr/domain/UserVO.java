@@ -1,16 +1,41 @@
 package com.wrkbr.domain;
 
+import org.hibernate.annotations.Entity;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class UserVO {
 
+    @Id
+    @Pattern(regexp="[A-Za-z0-9+]{5,10}", message="영문,숫자만 포함해서 5~10자만 입력할 수 있습니다.")
     private String userid;
+
+    @Column
+    @Pattern(regexp="\\S{6,13}", message="패스워드는 공백 없이 6~20자로 입력하세요.")
     private String userpw;
+
+    @Column
+    @Pattern(regexp="[가-힣]{2,10}", message="이름을 확인하세요.")
     private String username;
+
+    @Column
+    @NotNull(message="성별을 선택하세요.")
     private String userGender;
+
+    @Id
+    @Pattern(regexp="\\d{3}-?\\d{4}-\\d{4}", message="휴대폰 번호를 확인하세요.")
     private String userPhone;
+
+    @Column
+    @Pattern(regexp="[a-z0-9]+([-+._][a-z0-9]+){0,2}@.*?(\\.(a(?:[cdefgilmnoqrstuwxz]|ero|(?:rp|si)a)|b(?:[abdefghijmnorstvwyz]iz)|c(?:[acdfghiklmnoruvxyz]|at|o(?:m|op))|d[ejkmoz]|e(?:[ceghrstu]|du)|f[ijkmor]|g(?:[abdefghilmnpqrstuwy]|ov)|h[kmnrtu]|i(?:[delmnoqrst]|n(?:fo|t))|j(?:[emop]|obs)|k[eghimnprwyz]|l[abcikrstuvy]|m(?:[acdeghklmnopqrstuvwxyz]|il|obi|useum)|n(?:[acefgilopruz]|ame|et)|o(?:m|rg)|p(?:[aefghklmnrstwy]|ro)|qa|r[eosuw]|s[abcdeghijklmnortuvyz]|t(?:[cdfghjklmnoprtvwz]|(?:rav)?el)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])\\b){1,2}", message="올바른 이메일 형식이 아닙니다.")
     private String userEmail;
+
     private String userEmailHash;
     private boolean userEmailChecked;
     private Date userRegDate;

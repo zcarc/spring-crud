@@ -57,12 +57,12 @@
                                     <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
 
                                     <div class="form-group">
-                                        <input type="text" class="form-control form-control-user" name="username"
+                                        <input type="text" class="form-control form-control-user" id="uid" name="username"
                                                placeholder="user ID" autofocus>
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="password" class="form-control form-control-user" name="password"
+                                        <input type="password" class="form-control form-control-user" id="upw" name="password"
                                                placeholder="Password" value="">
                                     </div>
 
@@ -121,7 +121,20 @@
 
 <script type="text/javascript">
     $("#loginBtn").click(function (e) {
+
         e.preventDefault();
+
+        if ( !$("#uid").val() | !$("#upw").val() ) {
+            alert("아이디 또는 패스워드를 입력하지 않았습니다.");
+            return;
+        } else if($("#uid").val().length < 5) {
+            alert("아이디는 5자 이상이어야 합니다.");
+            return;
+        } else if($("#upw").val().length < 6) {
+            alert("비밀번호는 6자 이상이어야 합니다.");
+            return;
+        }
+
         $("form").submit();
     });
 </script>

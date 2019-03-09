@@ -9,7 +9,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml"})
+@ContextConfiguration({ "file:src/main/webapp/WEB-INF/spring/root-context.xml",
+        "file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml" })
 @Log4j
 public class UserMapperTest {
 
@@ -18,6 +19,7 @@ public class UserMapperTest {
 
     @Test
     public void readTest(){
+        log.info("mapper: " + mapper);
         UserVO vo = mapper.read("test01");
         log.info("vo: " + vo);
     }

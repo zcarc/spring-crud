@@ -38,4 +38,15 @@
 
     </select>
 
+    <insert id="insert" >
+      insert into user_table(userid, userpw, username, userGender, userPhone, userEmail, userEmailHash, userEmailChecked)
+      values(#{userid}, #{userpw}, #{username}, #{userGender}, #{userPhone}, #{userEmail}, #{userEmailHash}, #{userEmailChecked})
+    </insert>
+
+    <insert id="insertAuth">
+      insert into user_table_auth(userid, auth)
+      values(#{userid}, #{auth})
+    </insert>
+
+
 </mapper>
