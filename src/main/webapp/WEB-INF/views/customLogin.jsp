@@ -66,6 +66,13 @@
                                                placeholder="Password" value="">
                                     </div>
 
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input type="checkbox" class="custom-control-input" id="customCheck"
+                                                   name="remember-me">
+                                            <label class="custom-control-label" for="customCheck">Remember Me</label>
+                                        </div>
+                                    </div>
 
                                     <a href="index.html" id="loginBtn" class="btn btn-primary btn-user btn-block">
                                         Login

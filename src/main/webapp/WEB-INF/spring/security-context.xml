@@ -19,8 +19,9 @@
 
         <security:access-denied-handler ref="customAccessDenied" />
 
-        <security:logout logout-url="/customLogout" invalidate-session="true" />
+        <security:logout logout-url="/customLogout" invalidate-session="true" delete-cookies="remember-me, JSESSION_ID" />
 
+        <security:remember-me data-source-ref="dataSource" token-validity-seconds="604800" />
 
     </security:http>
 
@@ -29,9 +30,7 @@
 
         <security:authentication-provider user-service-ref="customUserDetailService">
 
-
             <security:password-encoder ref="bcryptPasswordEncoder" />
-
 
         </security:authentication-provider>
 
