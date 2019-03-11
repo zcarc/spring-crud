@@ -30,7 +30,7 @@ import java.util.Map;
 public class UserController {
 
 
-    @Autowired
+    @Autowired(required = false)
     private PasswordEncoder pwEncoder;
 
 
