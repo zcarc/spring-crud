@@ -42,7 +42,7 @@
                 <c:forEach items="${list }" var="board">
                     <tr>
                         <td><c:out value="${board.bno}" /></td>
-                        <td><c:out value="${board.title}" /></td>
+                        <td><a href="/board/read?bno=<c:out value="${board.bno}" />"><c:out value="${board.title}" /></a></td>
                         <td><c:out value="${board.writer}" /></td>
                         <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regDate}"/></td>
                         <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate}"/></td>
@@ -89,11 +89,12 @@
 
         checkModal(result);
 
+        history.replaceState({}, null, null);
 
         // post result 모달
         function checkModal(result){
 
-            if(result === '') {
+            if(result === '' || history.state) {
                 return;
             }
 
