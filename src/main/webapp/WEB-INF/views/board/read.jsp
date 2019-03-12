@@ -48,6 +48,9 @@
             <input type="hidden" id="bno" name="bno" value="${boardVO.bno}">
             <input type="hidden" name="currentPage" value="${criteria.currentPage}">
             <input type="hidden" name="displayRecords" value="${criteria.displayRecords}">
+            <input type="hidden" name="type" value="${criteria.type}">
+            <input type="hidden" name="keyword" value="${criteria.keyword}">
+
         </form>
 
 

@@ -51,6 +51,28 @@
                 </tbody>
             </table>
 
+
+
+            <form id='searchForm' action='/board/list' method='get'>
+
+                <select name='type'>
+                    <option value='' <c:out value="${pageDTO.criteria.type == null ? 'selected' : ''}" /> >--</option>
+                    <option value='T' <c:out value="${pageDTO.criteria.type eq 'T' ? 'selected' : '' }" /> >제목
+                    <option value='C' <c:out value="${pageDTO.criteria.type eq 'C' ? 'selected' : '' }" /> >내용</option>
+                    <option value='W' <c:out value="${pageDTO.criteria.type eq 'W' ? 'selected' : '' }" /> >작성자</option>
+                    <option value='TC' <c:out value="${pageDTO.criteria.type eq 'TC' ? 'selected' : '' }" /> >제목 or 내용</option>
+                    <option value='TW' <c:out value="${pageDTO.criteria.type eq 'TW' ? 'selected' : '' }" /> >제목 or 작성자</option>
+                    <option value='TWC' <c:out value="${pageDTO.criteria.type eq 'TWC' ? 'selected' : '' }" /> >제목 or 내용 or 작성자</option>
+                </select>
+
+                <input type='text' name='keyword' value="${pageDTO.criteria.keyword }">
+                <input type='hidden' name="currentPage" value="${pageDTO.criteria.currentPage }">
+                <input type='hidden' name="displayRecords" value="${pageDTO.criteria.displayRecords }">
+                <button class='btn btn-primary'>Search</button>
+            </form>
+
+
+
             <ul class="pagination" style="float:right;">
                 <c:if test="${pageDTO.prev}">
                     <li class="paginate_button page-item previous">
@@ -147,11 +169,33 @@
             $("#actionForm").submit();
         });
 
+        // read
         $(".move").click(function(e){
            e.preventDefault();
             $("#actionForm").append("<input type='hidden' name='bno' value='"+$(this).attr('href')+"'>");
+            $("#actionForm").append($("#searchForm").find("select[name='type']"));
+            $("#actionForm").append($("#searchForm").find("input[name='keyword']"));
             $("#actionForm").attr("action", "/board/read");
+
             $("#actionForm").submit();
+        });
+
+        // search
+        var searchForm = $("#searchForm");
+        $("#searchForm button").click(function(e){
+
+           if(!searchForm.find("option:selected").val()){
+               alert("검색 종류를 선택하세요.");
+               return false;
+           }
+
+           if(!searchForm.find("input[name='keyword']").val()){
+               alert("키워르를 입력하세요.");
+               return false;
+           }
+
+           searchForm.find("input[name='currentPage']").val('1');
+           searchForm.submit();
         });
 
 

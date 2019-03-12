@@ -62,7 +62,16 @@ public class BoardMapperTests {
 
     @Test
     public void testBoardCount(){
-        log.info(boardMapper.boardCount());
+
+        log.info(boardMapper.boardCount(new Criteria()));
+    }
+
+    @Test
+    public void testGetListWithSearch(){
+        Criteria criteria = new Criteria();
+        criteria.setKeyword("Auth");
+        criteria.setType("TW");
+        boardMapper.getListWithPagination(criteria).forEach(log::info);
     }
 
 }

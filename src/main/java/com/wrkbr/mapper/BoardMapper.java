@@ -11,7 +11,7 @@ public interface BoardMapper {
 
     public List<BoardVO> getList();
     public List<BoardVO> getListWithPagination(Criteria criteria);
-    public int boardCount();
+    public int boardCount(Criteria criteria);
     public void insert(BoardVO boardVO);
     public void insertSelectKey(BoardVO boardVO);
     public BoardVO read(Long bno);

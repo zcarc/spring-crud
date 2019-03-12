@@ -24,6 +24,8 @@
 
             <input type="hidden" name="currentPage" value="${criteria.currentPage}">
             <input type="hidden" name="displayRecords" value="${criteria.displayRecords}">
+            <input type="hidden" name="type" value="${criteria.type}">
+            <input type="hidden" name="keyword" value="${criteria.keyword}">
 
             <div class="form-group">
                 <label>Number</label>
@@ -74,9 +76,13 @@
                 //location = "/board/list";
                 var currentPage = $("input[name='currentPage']").clone();
                 var displayRecords = $("input[name='displayRecords']").clone();
+                var type = $("input[name='type']").clone();
+                var keyword = $("input[name='keyword']").clone();
                 $("form").empty();
                 $("form").append(currentPage);
                 $("form").append(displayRecords);
+                $("form").append(type);
+                $("form").append(keyword);
                 $("form").attr("action", "/board/list").attr("method", "get");
 
                 $("form").submit();

@@ -28,8 +28,11 @@ public class BoardController {
     @GetMapping("/list")
     public void list(Criteria criteria, Model model){
         log.info("list()...");
+
+        log.info("criteria: " + criteria);
+
         model.addAttribute("list", boardService.getListWithPagination(criteria));
-        model.addAttribute("pageDTO", new PageDTO(criteria, boardService.boardCount()));
+        model.addAttribute("pageDTO", new PageDTO(criteria, boardService.boardCount(criteria)));
     }
 
     @GetMapping("/insert")
@@ -65,10 +68,7 @@ public class BoardController {
         if(boardService.update(boardVO))
             redirectAttributes.addFlashAttribute("result", "successfully updated");
 
-        redirectAttributes.addAttribute("currentPage", criteria.getCurrentPage());
-        redirectAttributes.addAttribute("displayRecords", criteria.getDisplayRecords());
-
-        return "redirect:/board/list";
+        return "redirect:/board/list" + criteria.getListLink();
     }
 
     @PostMapping("/delete")
@@ -79,10 +79,7 @@ public class BoardController {
         if(boardService.delete(bno))
             redirectAttributes.addFlashAttribute("result","successfully deleted");
 
-        redirectAttributes.addAttribute("currentPage", criteria.getCurrentPage());
-        redirectAttributes.addAttribute("displayRecords", criteria.getDisplayRecords());
-
-        return "redirect:/board/list";
+        return "redirect:/board/list" + criteria.getListLink();
     }
 
 
