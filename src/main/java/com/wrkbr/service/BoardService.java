@@ -1,12 +1,15 @@
 package com.wrkbr.service;
 
 import com.wrkbr.domain.BoardVO;
+import com.wrkbr.domain.Criteria;
 
 import java.util.List;
 
 public interface BoardService {
 
     public List<BoardVO> getList();
+    public List<BoardVO> getListWithPagination(Criteria criteria);
+    public int boardCount();
     public BoardVO read(Long bno);
     public void insert(BoardVO boardVO);
     public void insertSelectKey(BoardVO boardVO);

@@ -22,6 +22,9 @@
 
             <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
 
+            <input type="hidden" name="currentPage" value="${criteria.currentPage}">
+            <input type="hidden" name="displayRecords" value="${criteria.displayRecords}">
+
             <div class="form-group">
                 <label>Number</label>
                 <input class="form-control" name="bno" value='<c:out value="${boardVO.bno }" />' readonly >
@@ -42,14 +45,11 @@
                 <input class="form-control" name="writer" value='<c:out value="${boardVO.writer }" />' readonly>
             </div>
 
+            <button data-oper='save' class='btn btn-primary'>저장</button>
+            <button data-oper='delete' class="btn btn-danger">삭제</button>
+            <button data-oper='list' class='btn btn-warning'>목록</button>
+
         </form>
-
-
-        <button data-oper='save' type="submit" class='btn btn-primary'>저장</button>
-        <button data-oper='delete' type="submit" class="btn btn-danger">삭제</button>
-        <button data-oper='list' type="submit" class='btn btn-warning'>목록</button>
-
-
 
 
     </div> <!-- card-body -->
@@ -63,6 +63,7 @@
 
     $(document).ready(function(){
 
+
         $("button").click(function(){
             var dataOper = $(this).data("oper");
             console.log("var dataOper = $(this).data(\"oper\")" + dataOper);
@@ -70,7 +71,16 @@
             if(dataOper == 'delete'){
                 $("form").attr("action", "/board/delete");
             } else if(dataOper == 'list') {
-                location = "/board/list";
+                //location = "/board/list";
+                var currentPage = $("input[name='currentPage']").clone();
+                var displayRecords = $("input[name='displayRecords']").clone();
+                $("form").empty();
+                $("form").append(currentPage);
+                $("form").append(displayRecords);
+                $("form").attr("action", "/board/list").attr("method", "get");
+
+                $("form").submit();
+
                 return;
             }
 

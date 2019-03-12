@@ -1,6 +1,7 @@
 package com.wrkbr.service;
 
 import com.wrkbr.domain.BoardVO;
+import com.wrkbr.domain.Criteria;
 import lombok.extern.log4j.Log4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.inject.Inject;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml"})
 @Log4j
 public class BoardServiceTests {
 
-    @Autowired
+    @Inject
     private BoardService boardService;
 
     @Test
@@ -57,6 +60,13 @@ public class BoardServiceTests {
     @Test
     public void testDelete() {
         log.info("Delete Result: " + boardService.delete(3L));
+    }
+
+    @Test
+    public void testGetListWithPagination(){
+        Criteria criteria = new Criteria();
+        criteria.setCurrentPage(1);
+        boardService.getListWithPagination(criteria).forEach(log::info);
     }
 
 }

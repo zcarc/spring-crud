@@ -84,10 +84,18 @@ public class BoardControllerTests {
 
     @Test
     public void testDelete() throws Exception {
-        String resultMap = mockMvc.perform(MockMvcRequestBuilders.post("/board/delete").param("bno", "5"))
+        String resultMap = mockMvc.perform(MockMvcRequestBuilders.post("/board/delete").param("bno", "95"))
                 .andReturn().getModelAndView().getViewName();
 
         log.info("resultMap: " + resultMap);
+    }
+
+    @Test
+    public void testGetListWithPagination() throws Exception {
+        log.info(
+                    mockMvc.perform(MockMvcRequestBuilders.get("/board/list").param("currentPage","2").param("displayRecords", "30")
+                                    ).andReturn().getModelAndView().getModelMap()
+                );
     }
 
 }

@@ -18,7 +18,7 @@
 
     </div>
     <div class="card-body">
-        <div class="table-responsive">
+        <div class="table-responsive clearfix">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                 <tr>
@@ -42,7 +42,7 @@
                 <c:forEach items="${list }" var="board">
                     <tr>
                         <td><c:out value="${board.bno}" /></td>
-                        <td><a href="/board/read?bno=<c:out value="${board.bno}" />"><c:out value="${board.title}" /></a></td>
+                        <td><a href="${board.bno}" class="move"><c:out value="${board.title}" /></a></td>
                         <td><c:out value="${board.writer}" /></td>
                         <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regDate}"/></td>
                         <td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate}"/></td>
@@ -50,6 +50,32 @@
                 </c:forEach>
                 </tbody>
             </table>
+
+            <ul class="pagination" style="float:right;">
+                <c:if test="${pageDTO.prev}">
+                    <li class="paginate_button page-item previous">
+                        <a href="${pageDTO.startPageNum - 1}" class="page-link">Previous</a>
+                    </li>
+                </c:if>
+
+                <c:forEach var="num" begin="${pageDTO.startPageNum }" end="${pageDTO.endPageNum }">
+                    <li class="paginate_button page-item ${pageDTO.criteria.currentPage == num ? 'active' : ''}">
+                        <a href="${num}" class="page-link">${num }</a>
+                    </li>
+                </c:forEach>
+
+                <c:if test="${pageDTO.next }">
+                    <li class="paginate_button next">
+                        <a href="${pageDTO.endPageNum + 1}" class="page-link">Next</a>
+                    </li>
+                </c:if>
+
+            </ul>
+
+            <form id="actionForm" action="/board/list" method="get">
+                <input type="hidden" name="currentPage" value="${pageDTO.criteria.currentPage}">
+                <input type="hidden" name="displayRecords" value="${pageDTO.criteria.displayRecords}">
+            </form>
 
 
 
@@ -113,6 +139,21 @@
         $("#regBtn").click(function(){
             location = "/board/insert";
         });
+
+        // pagination
+        $(".paginate_button a").click(function(e){
+            e.preventDefault();
+            $("#actionForm").find("input[name='currentPage']").val($(this).attr("href"));
+            $("#actionForm").submit();
+        });
+
+        $(".move").click(function(e){
+           e.preventDefault();
+            $("#actionForm").append("<input type='hidden' name='bno' value='"+$(this).attr('href')+"'>");
+            $("#actionForm").attr("action", "/board/read");
+            $("#actionForm").submit();
+        });
+
 
     });
 

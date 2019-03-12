@@ -1,6 +1,7 @@
 package com.wrkbr.service;
 
 import com.wrkbr.domain.BoardVO;
+import com.wrkbr.domain.Criteria;
 import com.wrkbr.mapper.BoardMapper;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,24 @@ import java.util.List;
 @Log4j
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
+    @Autowired(required = false)
     private BoardMapper boardMapper;
 
     @Override
     public List<BoardVO> getList() {
         log.info("getList()...");
         return boardMapper.getList();
+    }
+
+    @Override
+    public List<BoardVO> getListWithPagination(Criteria criteria) {
+        log.info("getListWithPagination()...");
+        return boardMapper.getListWithPagination(criteria);
+    }
+
+    @Override
+    public int boardCount() {
+        return boardMapper.boardCount();
     }
 
     @Override

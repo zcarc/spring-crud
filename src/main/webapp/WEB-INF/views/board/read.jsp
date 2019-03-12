@@ -39,10 +39,16 @@
             <input class="form-control" name="writer" value='<c:out value="${boardVO.writer }" />' readonly>
         </div>
 
-        <a></a>
 
-        <a href='/board/update?bno=<c:out value="${boardVO.bno}" />' data-oper="update" class="btn btn-primary">수정</a>
-        <a href='/board/list' data-oper="list" class="btn btn-warning">목록</a>
+        <button data-oper='update' class='btn btn-primary'>수정</button>
+        <button data-oper='list' class='btn btn-warning'>목록</button>
+
+
+        <form id="operForm" action="/board/update" method="get">
+            <input type="hidden" id="bno" name="bno" value="${boardVO.bno}">
+            <input type="hidden" name="currentPage" value="${criteria.currentPage}">
+            <input type="hidden" name="displayRecords" value="${criteria.displayRecords}">
+        </form>
 
 
 
@@ -52,6 +58,21 @@
 
 </div>
 <!-- /.container-fluid -->
+
+<script type="text/javascript">
+
+    var operForm = $("#operForm");
+    $("button[data-oper='update']").click(function(e){
+        operForm.submit();
+    });
+
+    $("button[data-oper='list']").click(function(e){
+       operForm.find("#bno").remove();
+       operForm.attr("action", "/board/list");
+       operForm.submit();
+    });
+
+</script>
 
 
 <%@ include file="../includes/footer.jsp" %>

@@ -1,6 +1,7 @@
 package com.wrkbr.mapper;
 
 import com.wrkbr.domain.BoardVO;
+import com.wrkbr.domain.Criteria;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -9,6 +10,8 @@ public interface BoardMapper {
 
 
     public List<BoardVO> getList();
+    public List<BoardVO> getListWithPagination(Criteria criteria);
+    public int boardCount();
     public void insert(BoardVO boardVO);
     public void insertSelectKey(BoardVO boardVO);
     public BoardVO read(Long bno);

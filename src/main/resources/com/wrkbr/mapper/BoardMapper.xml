@@ -13,6 +13,16 @@
         ]]>
     </select>
 
+    <select id="getListWithPagination" resultType="com.wrkbr.domain.BoardVO">
+         <![CDATA[
+          select * from board order by bno desc limit #{offset}, #{displayRecords}
+        ]]>
+    </select>
+
+    <select id="boardCount" resultType="int">
+        select count(bno) from board
+    </select>
+
 
     <insert id="insert">
         insert into board(title, content, writer) values(#{title}, #{content}, #{writer})
