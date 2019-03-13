@@ -4,6 +4,7 @@ import com.wrkbr.domain.BoardVO;
 import com.wrkbr.domain.Criteria;
 import com.wrkbr.domain.PageDTO;
 import com.wrkbr.service.BoardService;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Log4j
 public class BoardController {
 
-    @Autowired
+    @Setter(onMethod_ = @Autowired)
     private BoardService boardService;
 
 //    @GetMapping("/list")

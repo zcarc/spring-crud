@@ -4,6 +4,7 @@ import com.wrkbr.domain.UserVO;
 import com.wrkbr.email.EmailChecker;
 import com.wrkbr.email.GmailSender;
 import com.wrkbr.service.UserService;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,11 +31,11 @@ import java.util.Map;
 public class UserController {
 
 
-    @Autowired(required = false)
+    @Setter(onMethod_ = @Autowired)
     private PasswordEncoder pwEncoder;
 
 
-    @Autowired
+    @Setter(onMethod_ = @Autowired)
     private UserService userService;
 
     // key: hashKey, checkedKey
