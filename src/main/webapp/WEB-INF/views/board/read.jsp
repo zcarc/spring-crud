@@ -79,6 +79,10 @@
 
 </div>
 
+<%-- Reply pagination --%>
+<div class="card-footer clearfix">
+</div>
+
 
 </div>
 <!-- /.container-fluid -->
@@ -97,13 +101,13 @@
 
 
                 <div class="form-group">
-                    <label>Reply</label>
-                    <input class="form-control" name='reply' value='New Reply!!!'>
+                    <label>Replyer</label>
+                    <input class="form-control" name='replyer' value='replyer' readonly>
                 </div>
 
                 <div class="form-group">
-                    <label>Replyer</label>
-                    <input class="form-control" name='replyer' value='replyer' readonly>
+                    <label>Reply</label>
+                    <input class="form-control" name='reply' value='New Reply!!!'>
                 </div>
 
                 <div class="form-group">
@@ -148,27 +152,96 @@
                 bno:bno,
                 currentPage:currentPage || 1
             },
-            function(result) {
+            function(replyCountInDTO,replyList) {
+                console.log("replyCountInDTO: " + replyCountInDTO);
+                console.log("replyList: " + replyList);
 
-                console.log("result: " + result);
+                if(currentPage === -1) {
+                    console.log("currentPage === -1");
+                    pageNum = Math.ceil(replyCountInDTO/10.0);
+                    showList(pageNum);
+                    return;
+                }
+
 
                 var str = "";
-                if(result == null || result.length == 0) {
+                if(replyList == null || replyList.length == 0) {
                     replyUL.html("");
                     return;
                 }
-                for(var i=0, len=result.length || 0; i<len; i++) {
-                    str += "<li class='clearfix' data-rno='"+ result[i].rno+ "'>";
-                    str += "	<div><div class='header'><strong class='primary-font'>"+result[i].replyer+"</strong>";
-                    str += "		<small class='float-right'>"+replyService.displayTime(result[i].regDate)+"</small></div>";
-                    str += "		<p>"+result[i].reply+"</p><hr></div></li>";
+                for(var i=0, len = replyList.length || 0; i<len; i++) {
+                    str += "<li class='clearfix' data-rno='"+ replyList[i].rno+ "'>";
+                    str += "	<div><div class='header'><strong class='primary-font'>"+replyList[i].replyer+"</strong>";
+                    str += "		<small class='float-right'>"+replyService.displayTime(replyList[i].regDate)+"</small></div>";
+                    str += "		<p>"+replyList[i].reply+"</p><hr></div></li>";
                 }
 
                 replyUL.html(str);
 
+                showReplyPage(replyCountInDTO);
+
             }); // callback
 
     } // showList()
+
+
+    // Reply pagination
+    var pageNum = 1;
+
+    function showReplyPage(replyCount){
+
+        var endNum = Math.ceil(pageNum / 10.0) * 10;
+        var startNum = endNum - 9;
+
+        var prev = startNum != 1;
+        var next = false;
+
+        if(endNum * 10 > replyCount) {
+            endNum = Math.ceil(replyCount/10.0);
+        }
+
+        if(endNum * 10 < replyCount) {
+            next = true;
+        }
+
+        var str = "<ul class='pagination float-right'>";
+
+        if(prev){
+            str += "<li class='page-item'><a class='page-link' href='"+(startNum -1)+"'>Previous</a></li>";
+        }
+
+        for(var i = startNum; i<= endNum; i++){
+            var active = pageNum == i ? "active" : "";
+            str += "<li class='page-item "+active+" '><a class='page-link' href='"+i+"'>"+i+"</a></li>";
+        }
+
+        if(next) {
+            str += "<li class='page-item'><a class='page-link' href='"+(endNum + 1)+"'>Next</a></li>";
+        }
+
+        str += "</ul></div>";
+
+        $(".card-footer").html(str);
+
+    } // showReplyPage()
+
+
+    // Click pagination
+    $(".card-footer").on("click", "li a", function(e){
+
+        e.preventDefault();
+        console.log("pagination");
+
+        var targetPageNum = $(this).attr("href");
+        console.log("targetPageNum: " + targetPageNum);
+
+        pageNum = targetPageNum;
+
+        showList(pageNum);
+
+    });
+
+
 
     // replyService.insert(
     //     {reply:"댓글 테스트" + bno, replyer:"작성자" + bno, bno:bno},
@@ -201,11 +274,8 @@
     //     console.log(result);
     // });
 
-</script>
-
 
 <%--Reply Modal--%>
-<script type="text/javascript">
 
     var modal = $("#myModal");
 
@@ -223,11 +293,11 @@
         replyService.insert(
             {reply: $("input[name=reply]").val(), replyer: $("input[name=replyer]").val(), bno: "${boardVO.bno}"},
             function(result){
-               console.log(result);
+               console.log("result: " + result);
                modal.find("input").val("");
                modal.modal("hide");
 
-               showList(1);
+               showList(-1);
             });
     });
 
@@ -256,7 +326,7 @@
                 console.log(result);
                 modal.find("input").val("");
                 modal.modal("hide");
-                showList(1);
+                showList(pageNum);
             });
     });
 
@@ -266,8 +336,13 @@
                 console.log(result);
                 modal.find("input").val("");
                 modal.modal("hide");
-                showList(1);
+                showList(pageNum);
             });
+    });
+
+    $("#modalCloseBtn").click(function(){
+        modal.find("input").val("");
+        modal.modal("hide");
     });
 </script>
 

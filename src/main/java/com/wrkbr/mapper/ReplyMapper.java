@@ -15,4 +15,5 @@ public interface ReplyMapper {
     public int update(ReplyVO replyVO);
     public List<ReplyVO> getListWithPagination(@Param("bno") Long bno,
                                                @Param("criteria") Criteria criteria);
+    public int replyCount(Long bno);
 }

@@ -1,6 +1,7 @@
 package com.wrkbr.controller;
 
 import com.wrkbr.domain.Criteria;
+import com.wrkbr.domain.ReplyPagesDTO;
 import com.wrkbr.domain.ReplyVO;
 import com.wrkbr.service.ReplyService;
 import lombok.AllArgsConstructor;
@@ -31,8 +32,8 @@ public class ReplyController {
     }
 
     @GetMapping(value="/pages/{bno}/{currentPage}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
-    public ResponseEntity<List<ReplyVO>> getListWithPagination(@PathVariable("bno") Long bno,
-                                                                @PathVariable("currentPage") int currentPage){
+    public ResponseEntity<ReplyPagesDTO> getListWithPagination(@PathVariable("bno") Long bno,
+                                                               @PathVariable("currentPage") int currentPage){
         log.info("getListWithPagination()... " + "bno: " + bno + " currentPage: " + currentPage);
 
         Criteria criteria = new Criteria(currentPage, 10);

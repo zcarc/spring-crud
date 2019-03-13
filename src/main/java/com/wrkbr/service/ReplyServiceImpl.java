@@ -1,6 +1,7 @@
 package com.wrkbr.service;
 
 import com.wrkbr.domain.Criteria;
+import com.wrkbr.domain.ReplyPagesDTO;
 import com.wrkbr.domain.ReplyVO;
 import com.wrkbr.mapper.ReplyMapper;
 import lombok.AllArgsConstructor;
@@ -43,8 +44,15 @@ public class ReplyServiceImpl implements  ReplyService {
     }
 
     @Override
-    public List<ReplyVO> getListWithPagination(Long bno, Criteria criteria) {
+    public ReplyPagesDTO getListWithPagination(Long bno, Criteria criteria) {
         log.info("getListWithPagination()");
-        return replyMapper.getListWithPagination(bno, criteria);
+        return new ReplyPagesDTO(
+                replyMapper.replyCount(bno),
+                replyMapper.getListWithPagination(bno, criteria));
+    }
+
+    @Override
+    public int replyCount(Long bno) {
+        return replyMapper.replyCount(bno);
     }
 }

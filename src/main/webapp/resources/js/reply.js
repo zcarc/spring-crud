@@ -29,11 +29,13 @@ var replyService = (function(){
     function getListWithPagination(data, callback, error){
         var bno = data.bno;
         var currentPage = data.currentPage || 1;
+        if(currentPage === -1)
+            currentPage = 1;
 
         $.getJSON("/replies/pages/" + bno + "/" + currentPage + ".json",
             function(result){
                 if(callback)
-                    callback(result);
+                    callback(result.replyCountInDTO, result.replyList);
             }).fail(function(xhr, status, err){
                 if(error && err)
                     error(err);

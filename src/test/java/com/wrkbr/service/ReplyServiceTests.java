@@ -1,5 +1,7 @@
 package com.wrkbr.service;
 
+import com.wrkbr.domain.Criteria;
+import com.wrkbr.domain.ReplyPagesDTO;
 import com.wrkbr.domain.ReplyVO;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -35,6 +37,12 @@ public class ReplyServiceTests {
         replyVO.setReply("테스트1");
         replyVO.setReplyer("테스트1");
         log.info("result: " + replyService.insert(replyVO));
+    }
+
+    @Test
+    public void testGetListWithPagination(){
+        ReplyPagesDTO replyPagesDTO = replyService.getListWithPagination(130L, new Criteria());
+        replyPagesDTO.getReplyList().forEach(log::info);
     }
 
 }
