@@ -3,6 +3,7 @@ package com.wrkbr.service;
 import com.wrkbr.domain.BoardVO;
 import com.wrkbr.domain.Criteria;
 import com.wrkbr.mapper.BoardMapper;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 @Log4j
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired(required = false)
+    @Setter(onMethod_ = @Autowired)
     private BoardMapper boardMapper;
 
     @Override

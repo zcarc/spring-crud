@@ -2,6 +2,7 @@ package com.wrkbr.mapper;
 
 import com.wrkbr.domain.BoardVO;
 import com.wrkbr.domain.Criteria;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public interface BoardMapper {
     public BoardVO read(Long bno);
     public int delete(Long bno);
     public int update(BoardVO boardVO);
+    public void updateReplyCount(@Param("bno") Long bno, @Param("amount") int amount);
 
 
 

@@ -51,6 +51,10 @@
         insert into board(title, content, writer) values(#{title}, #{content}, #{writer})
     </insert>
 
+    <update id="updateReplyCount">
+        update board set replyCount = replyCount + #{amount} where bno = ${bno}
+    </update>
+
 
     <insert id="insertSelectKey">
 
