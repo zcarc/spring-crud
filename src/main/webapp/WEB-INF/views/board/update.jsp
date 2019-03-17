@@ -99,7 +99,7 @@
         (function(){
 
             $.getJSON("/board/getListAttach", {bno: "${boardVO.bno}"}, function(attachVOList){
-                console.log("attachVOList: " + attachVOList);
+                //console.log("attachVOList: " + attachVOList);
 
                 var str = "";
 
@@ -108,7 +108,7 @@
                     // If fileType is true, it's an image file.
                     if(attach.fileType){
 
-                        console.log("image type...");
+                        //console.log("image type...");
 
                         var imageThumbnailPath = encodeURIComponent( attach.uploadFolder+ "/s_" + attach.uuid + "_" + attach.fileName);
 
@@ -123,7 +123,7 @@
 
                     } else {
 
-                        console.log("not image type...");
+                        //console.log("not image type...");
 
                         var filePath = encodeURIComponent( attach.uploadFolder+ "/" + attach.uuid + "_" + attach.fileName);
 
@@ -141,7 +141,7 @@
 
                 }); // end each
 
-                console.log("Immediately executed function. str: " + str);
+                //console.log("Immediately executed function. str: " + str);
 
                 $(".uploadedResult ul").html(str);
 
@@ -152,7 +152,7 @@
 
         $("button").click(function(){
             var dataOper = $(this).data("oper");
-            console.log("var dataOper = $(this).data(\"oper\")" + dataOper);
+            //console.log("var dataOper = $(this).data(\"oper\")" + dataOper);
 
             if(dataOper == 'delete'){
 
@@ -177,7 +177,7 @@
 
             } else if(dataOper === 'save'){
 
-                console.log("save clicked.");
+                //console.log("save clicked.");
 
                 var str="";
 
@@ -253,7 +253,7 @@
             //image type
             if(obj.image) {
 
-                console.log("Image type...");
+                //console.log("Image type...");
 
                 var imageThumbnailPath = encodeURIComponent( obj.uploadFolder+ "/s_" + obj.uuid + "_" + obj.fileName);
 
@@ -268,10 +268,10 @@
 
             } else {
 
-                console.log("Not image type...");
+                //console.log("Not image type...");
 
                 var filePath = encodeURIComponent( obj.uploadFolder+ "/" + obj.uuid + "_" + obj.fileName);
-                console.log("var filePath = encodeURIComponent( obj.uploadFolder+ \"/\" + obj.uuid + \"_\" + obj.fileName): " + filePath);
+                //console.log("var filePath = encodeURIComponent( obj.uploadFolder+ \"/\" + obj.uuid + \"_\" + obj.fileName): " + filePath);
 
                 str += "<li data-path='"+obj.uploadFolder+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.image+"'>"
                     +       "<div>"
@@ -286,7 +286,7 @@
 
         }); // end each
 
-        console.log("str: " + str);
+        //console.log("str: " + str);
 
         $(".uploadedResult ul").append(str);
 
@@ -317,7 +317,7 @@
     // 'X'
     $(".uploadedResult").on("click", "button", function(e){
 
-        console.log("delete file...");
+        //console.log("delete file...");
 
         if(confirm("Remove this file?")){
 

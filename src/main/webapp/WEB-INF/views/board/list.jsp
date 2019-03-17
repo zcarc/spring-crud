@@ -146,7 +146,7 @@
                 return;
             }
 
-            console.log("parseInt(result):" + parseInt(result));
+            //console.log("parseInt(result):" + parseInt(result));
 
             if(parseInt(result) > 0) {
                 $(".modal-body").html("게시글 " + parseInt(result) + " 번이 등록 되었습니다." );
@@ -181,6 +181,7 @@
         });
 
         // search
+        // 검색 버튼 클릭 시
         var searchForm = $("#searchForm");
         $("#searchForm button").click(function(e){
 

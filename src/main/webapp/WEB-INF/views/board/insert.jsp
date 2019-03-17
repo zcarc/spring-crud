@@ -77,7 +77,7 @@
 
         $("button").click(function(e){
             e.preventDefault();
-            console.log("submit clicked.");
+            //console.log("submit clicked.");
 
             if($(this).data("type") == 'list'){
                 $("form").empty();
@@ -89,7 +89,7 @@
 
                 $(".uploadedResult ul li").each(function(i, e){
 
-                    console.dir("var obj = $(e): " + obj);
+                    //console.dir("var obj = $(e): " + obj);
                     var obj = $(e);
 
                     str += "<input type='hidden' name='attachVOList["+i+"].uploadFolder' value='"+obj.data("path")+"'>"
@@ -99,7 +99,7 @@
 
                 });
 
-                console.log("str: " + str);
+                //console.log("str: " + str);
 
                 $("form[role='form']").append(str).submit();
 
@@ -111,7 +111,7 @@
         });
 
 
-        //
+        // 확장자 확인
         var regex = new RegExp("(.*?)\.(exe|sh|zip|alz|rar|bat)$");
         var maxSize = 5242880;
 
@@ -132,10 +132,11 @@
         } // end checkExtension
 
 
+        // 파일 업로드 시
         $("input[type='file']").change(function(e){
 
             var formData = new FormData();
-            console.log("$(\"input[name='uploadFile']\")[0].files: " + $("input[name='uploadFile']")[0].files);
+            //console.log("$(\"input[name='uploadFile']\")[0].files: " + $("input[name='uploadFile']")[0].files);
 
 
             for(var i = 0; i < $("input[name='uploadFile']")[0].files.length; i++) {
@@ -160,7 +161,7 @@
                     xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
                 },
                 success : function(result){
-                    console.log(result);
+                    //console.log(result);
                     showUploadedResult(result);
                 }
 
@@ -168,7 +169,7 @@
 
         }); // change
 
-
+        // 파일 타입에 맞는 이미지 출력
         function showUploadedResult(uploadedResultArr) {
 
             if(!uploadedResultArr || uploadedResultArr.length == 0)
@@ -181,7 +182,7 @@
                 //image type
                 if(obj.image) {
 
-                    console.log("Image type...");
+                    //console.log("Image type...");
 
                     var imageThumbnailPath = encodeURIComponent( obj.uploadFolder+ "/s_" + obj.uuid + "_" + obj.fileName);
 
@@ -196,10 +197,10 @@
 
                 } else {
 
-                    console.log("Not image type...");
+                    //console.log("Not image type...");
 
                     var filePath = encodeURIComponent( obj.uploadFolder+ "/" + obj.uuid + "_" + obj.fileName);
-                    console.log("var filePath = encodeURIComponent( obj.uploadFolder+ \"/\" + obj.uuid + \"_\" + obj.fileName): " + filePath);
+                    //console.log("var filePath = encodeURIComponent( obj.uploadFolder+ \"/\" + obj.uuid + \"_\" + obj.fileName): " + filePath);
 
                     str += "<li data-path='"+obj.uploadFolder+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.image+"'>"
                         +       "<div>"
@@ -214,22 +215,23 @@
 
             }); // end each
 
-            console.log("str: " + str);
+            //console.log("str: " + str);
 
+            // 이미지 정보가 포함된 <li></li> 태그 추가
             $(".uploadedResult ul").append(str);
 
         } // end function showUploadResult()
 
 
-        // 'X'
+        // 파일 이미지에서 'X' 버튼 클릭 시 삭제
         $(".uploadedResult").on("click", "button", function(e){
 
-            console.log("delete file");
+            //console.log("delete file");
 
             var deleteFile = $(this).data("file");
             var type = $(this).data("type");
-            console.log("deleteFile: " + deleteFile);
-            console.log("type: " + type);
+            //console.log("deleteFile: " + deleteFile);
+            //console.log("type: " + type);
 
             var currentFileLi = $(this).closest("li").remove();
 
@@ -243,7 +245,7 @@
                     xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
                 },
                 success: function(result) {
-                    console.log("deleteFile result: " + result);
+                    //console.log("deleteFile result: " + result);
                     currentFileLi.remove();
 
                 }

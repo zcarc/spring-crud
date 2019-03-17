@@ -2,12 +2,12 @@
  *  reply.js
  */
 
-console.log("reply.js");
+//console.log.log("reply.js");
 
 var replyService = (function(){
 
     function insert(reply, callback, error){
-        console.log("insert()...");
+        //console.log.log("insert()...");
 
         $.ajax({
             type: 'post',
@@ -62,7 +62,7 @@ var replyService = (function(){
     }
 
     function update(data, callback, error){
-        console.log("rno: " + data.rno);
+        //console.log.log("rno: " + data.rno);
 
         $.ajax({
             type:  'put',

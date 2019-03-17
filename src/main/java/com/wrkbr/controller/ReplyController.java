@@ -21,6 +21,7 @@ public class ReplyController {
 
     private ReplyService replyService;
 
+    // 댓글 작성
     @PostMapping(value = "/insert", consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> insert (@RequestBody ReplyVO replyVO) {
@@ -32,6 +33,7 @@ public class ReplyController {
                 : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // 댓글 페이징
     @GetMapping(value="/pages/{bno}/{currentPage}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public ResponseEntity<ReplyPagesDTO> getListWithPagination(@PathVariable("bno") Long bno,
                                                                @PathVariable("currentPage") int currentPage){
@@ -41,6 +43,7 @@ public class ReplyController {
         return new ResponseEntity<>(replyService.getListWithPagination(bno, criteria), HttpStatus.OK);
     }
 
+    // 댓글 읽기
     @GetMapping(value = "/{rno}", produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     public ResponseEntity<ReplyVO> read(@PathVariable("rno") Long rno) {
         log.info("read()..." + " rno: " + rno);
@@ -48,6 +51,7 @@ public class ReplyController {
         return new ResponseEntity<>(replyService.read(rno), HttpStatus.OK);
     }
 
+    // 댓글 삭제
     @DeleteMapping(value = "/{rno}", produces = {MediaType.TEXT_PLAIN_VALUE})
     @PreAuthorize("principal.username == #replyVO.replyer")
     public ResponseEntity<String> delete(@PathVariable("rno") Long rno, @RequestBody ReplyVO replyVO) {
@@ -59,6 +63,7 @@ public class ReplyController {
                 : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // 댓글 수정
     @RequestMapping(value = "/{rno}", method = {RequestMethod.PUT, RequestMethod.PATCH},
                     consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
     @PreAuthorize("principal.username == #replyVO.replyer")

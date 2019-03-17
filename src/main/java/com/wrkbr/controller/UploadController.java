@@ -102,6 +102,7 @@ public class UploadController {
     } // uploadAjaxAction
 
 
+    // 오늘 날짜 기준 폴더 생성
     public String getFolder(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String dateFormat = simpleDateFormat.format(new Date());
@@ -109,6 +110,7 @@ public class UploadController {
         return dateFormat.replace("-", File.separator);
     }
 
+    // check image
     public boolean checkImageType(File file){
         try {
             String contentType = Files.probeContentType(file.toPath());
@@ -122,6 +124,7 @@ public class UploadController {
         return false;
     }
 
+    // 섬네일 출력
     @GetMapping("/displayImage")
     @ResponseBody
     public ResponseEntity<byte[]> displayImage(String fileName){
@@ -148,6 +151,7 @@ public class UploadController {
     }// displayImage()
 
 
+    // 파일 다운로드
 	@GetMapping(value = "/downloadFile", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
 	public ResponseEntity<Resource> downloadFile(String fileName, @RequestHeader("User-Agent") String userAgent) {
@@ -202,7 +206,7 @@ public class UploadController {
         return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 
-
+    // 이미지 or 파일 삭제
     @PostMapping("/deleteFile")
     @ResponseBody
     public ResponseEntity<String> deleteFile(String fileName, String type) {

@@ -99,8 +99,9 @@ public class BoardController {
         List<BoardAttachVO> boardAttachVOList = boardService.getListAttach(bno);
         log.info("boardAttachVOList: " + boardAttachVOList);
 
-        // boardAttachMapper.deleteAll(bno);
-        // boardMapper.delete(bno);
+        // boardService.delete :
+        // boardAttachMapper.deleteAll(bno),
+        // boardMapper.delete(bno)
         if(boardService.delete(bno) && (boardAttachVOList != null || boardAttachVOList.size() > 0)) {
 
             // Physical deletion.
@@ -131,6 +132,7 @@ public class BoardController {
             return;
         }
 
+        // 물리적인 파일 삭제
         attachList.forEach(attach -> {
             try {
 
@@ -140,7 +142,7 @@ public class BoardController {
                 boolean deletedFile = Files.deleteIfExists(file);
                 log.info("Files.deleteIfExists(file): " + deletedFile);
 
-
+                // 파일의 "contentType"이 "image"일 경우 섬네일까지 삭제
                 if(Files.probeContentType(file).startsWith("image")) {
 
                     Path thumbnail = Paths.get("C:\\upload\\" + attach.getUploadFolder() + "\\s_" + attach.getUuid() + "_" + attach.getFileName());

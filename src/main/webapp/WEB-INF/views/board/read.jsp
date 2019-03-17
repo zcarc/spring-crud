@@ -165,10 +165,11 @@
 
     $(document).ready(function(){
 
+        // read.jsp로 이동 시, 즉시 실행 함수로 타입에 맞는 이미지 출력
         (function(){
 
             $.getJSON("/board/getListAttach", {bno: "${boardVO.bno}"}, function(attachVOList){
-                console.log("attachVOList: " + attachVOList);
+                //console.log("attachVOList: " + attachVOList);
 
                 var str = "";
 
@@ -177,7 +178,7 @@
                     //image type
                     if(attach.fileType){
 
-                        console.log("image type...");
+                        //console.log("image type...");
 
                         var imageThumbnailPath = encodeURIComponent( attach.uploadFolder+ "/s_" + attach.uuid + "_" + attach.fileName);
 
@@ -191,7 +192,7 @@
 
                     } else {
 
-                        console.log("not image type...");
+                        //console.log("not image type...");
 
                         str += "<li data-path='"+attach.uploadFolder+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"
                             +       "<div>"
@@ -206,7 +207,7 @@
 
                 }); // end each
 
-                console.log("str: " + str);
+                //console.log("str: " + str);
 
                 $(".uploadedResult ul").html(str);
 
@@ -215,19 +216,21 @@
         })(); // Immediate function
 
 
+        // 이미지: 섬네일 출력
+        // 파일: 다운로드
         $(".uploadedResult").on("click", "li", function(e){
 
-            console.log("li clicked...");
+            //console.log("li clicked...");
             var liObj = $(this);
 
             var path = encodeURIComponent(liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data("filename"));
 
             if(liObj.data("type")){
-                console.log("image type...");
+                //console.log("image type...");
                 showImage(path);
 
             } else{
-                console.log("not image type...");
+                //console.log("not image type...");
                 self.location = "/downloadFile?fileName=" + path;
 
             }
@@ -235,9 +238,10 @@
         }); // uploadedResult
 
 
+        // 이미지 타입일 경우 섬네일 출력
         function showImage(filePath) {
 
-            console.log("filePath: " + filePath);
+            //console.log("filePath: " + filePath);
 
             $(".bigPictureWrapper").css("display", "flex");
             $(".bigPicture").html("<img src='/displayImage?fileName="+filePath+"'>")
@@ -246,6 +250,7 @@
         } // showImage
 
 
+        // 원본 이미지 파일 클릭 시 닫기
         $(".bigPictureWrapper").on("click", function(e){
 
             $(".bigPicture").animate({width:'0%', height: '0%'}, 0);
@@ -261,7 +266,7 @@
         });
 
 
-
+        // ajax 공통으로 호출
         $(document).ajaxSend(function(e,xhr,options) {
             xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
         });
@@ -271,6 +276,7 @@
 
         showList(1);
 
+        // read.jsp 댓글 페이징 즉시 실행
         function showList(currentPage) {
 
             replyService.getListWithPagination({
@@ -278,11 +284,13 @@
                     currentPage:currentPage || 1
                 },
                 function(replyCountInDTO,replyList) {
-                    console.log("replyCountInDTO: " + replyCountInDTO);
-                    console.log("replyList: " + replyList);
+                    //console.log("replyCountInDTO: " + replyCountInDTO);
+                    //console.log("replyList: " + replyList);
 
+                    // currentPage가 -1일 경우 댓글 작성
+                    // replyService.getListWithPagination에서 currentPage 0으로 설정
                     if(currentPage === -1) {
-                        console.log("currentPage === -1");
+                        //console.log("currentPage === -1");
                         pageNum = Math.ceil(replyCountInDTO/10.0);
                         showList(pageNum);
                         return;
@@ -355,10 +363,10 @@
         $(".card-footer").on("click", "li a", function(e){
 
             e.preventDefault();
-            console.log("pagination");
+            //console.log("pagination");
 
             var targetPageNum = $(this).attr("href");
-            console.log("targetPageNum: " + targetPageNum);
+            //console.log("targetPageNum: " + targetPageNum);
 
             pageNum = targetPageNum;
 
@@ -420,14 +428,16 @@
             $("#myModal").modal("show");
         });
 
+        // 댓글 작성 클릭 시
         $("#modalRegisterBtn").click(function(e){
             replyService.insert(
                 {reply: $("input[name=reply]").val(), replyer: $("input[name=replyer]").val(), bno: "${boardVO.bno}"},
                 function(result){
-                    console.log("result: " + result);
+                    //console.log("result: " + result);
                     modal.find("input").val("");
                     modal.modal("hide");
 
+                    // -1은 댓글 작성 시 보내는 값
                     showList(-1);
                 });
         });
@@ -473,7 +483,7 @@
 
             replyService.update(reply,
                 function(result){
-                    console.log(result);
+                    //console.log(result);
                     modal.find("input").val("");
                     modal.modal("hide");
                     showList(pageNum);
@@ -494,7 +504,7 @@
 
             replyService.remove(modal.data("rno"), modal.find("input[name='replyer']").val(),
                 function(result){
-                    console.log(result);
+                    //console.log(result);
                     modal.find("input").val("");
                     modal.modal("hide");
                     showList(pageNum);

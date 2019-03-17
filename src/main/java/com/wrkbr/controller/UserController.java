@@ -40,7 +40,7 @@ public class UserController {
     // key: hashKey, checkedKey
     private static Map<String, EmailChecker> emailCheckerMap = new HashMap<>();
 
-
+    // 회원가입 GET
     @GetMapping("/register")
     public String register(Model model) {
         log.info("register GET...");
@@ -51,7 +51,7 @@ public class UserController {
 
     }
 
-
+    // 회원가입 POST
    @PostMapping("/register")
     public String register(@Valid UserVO vo, BindingResult result, Model model, HttpServletResponse response) throws Exception {
        log.info("register POST...");
@@ -166,7 +166,7 @@ public class UserController {
 
     }
 
-
+    // 이메일 인증 확인
     @GetMapping("/emailVerify")
     public String emailVerify(@RequestParam Map<String, Object> emailRequestMap, Model model, HttpServletResponse response) throws NoSuchAlgorithmException, IOException {
         log.info("emailVerify...");
