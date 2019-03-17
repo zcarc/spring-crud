@@ -9,13 +9,16 @@
     <bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
     <bean id="customUserDetailService" class="com.wrkbr.security.CustomUserDetailService" />
 
+    <!-- <bean id="customLoginSuccess" class="com.wrkbr.security.CustomLoginSuccessHandler" /> -->
+
     <security:http>
 
         <security:intercept-url pattern="/sample/all" access="permitAll()" />
         <security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')" />
         <security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')" />
 
-        <security:form-login login-page="/customLogin" />
+        <security:form-login login-page="/customLogin"  />
+        <!-- <security:form-login login-page="/customLogin" authentication-success-handler-ref="customLoginSuccess"/> -->
 
         <security:access-denied-handler ref="customAccessDenied" />
 

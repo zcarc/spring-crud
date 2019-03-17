@@ -8,7 +8,6 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -116,7 +115,6 @@ public class UserController {
 
 
     // 회원가입 인증메일 발송
-    @PreAuthorize("isAnonymous()")
     @PostMapping(value = "/requestEmailAuth", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String requestEmailAuth(@RequestBody Map<String, Object> map, HttpServletRequest request) throws NoSuchAlgorithmException, UnsupportedEncodingException, MessagingException {
@@ -169,7 +167,6 @@ public class UserController {
     }
 
 
-    @PreAuthorize("isAnonymous()")
     @GetMapping("/emailVerify")
     public String emailVerify(@RequestParam Map<String, Object> emailRequestMap, Model model, HttpServletResponse response) throws NoSuchAlgorithmException, IOException {
         log.info("emailVerify...");

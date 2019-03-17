@@ -2,6 +2,7 @@ package com.wrkbr.mapper;
 
 import com.wrkbr.domain.BoardVO;
 import com.wrkbr.domain.Criteria;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,14 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.inject.Inject;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"file:src/main/webapp/WEB-INF/spring/root-context.xml"})
 @Log4j
 public class BoardMapperTests {
 
-    @Inject
+    @Setter(onMethod_ = @Autowired)
     private BoardMapper boardMapper;
 
     @Test
@@ -30,7 +29,7 @@ public class BoardMapperTests {
         boardVO.setTitle("테스트제목4");
         boardVO.setContent("테스트내용4");
         boardVO.setWriter("작성자4");
-        boardMapper.insert(boardVO);
+        //boardMapper.insert(boardVO);
     }
 
     @Test

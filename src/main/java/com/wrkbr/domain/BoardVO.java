@@ -3,6 +3,7 @@ package com.wrkbr.domain;
 import lombok.ToString;
 
 import java.util.Date;
+import java.util.List;
 
 @ToString
 public class BoardVO {
@@ -16,6 +17,7 @@ public class BoardVO {
 
     private int replyCount;
 
+    private List<BoardAttachVO> attachVOList;
 
     public Long getBno() {
         return bno;
@@ -71,5 +73,13 @@ public class BoardVO {
 
     public void setReplyCount(int replyCount) {
         this.replyCount = replyCount;
+    }
+
+    public List<BoardAttachVO> getAttachVOList() {
+        return attachVOList;
+    }
+
+    public void setAttachVOList(List<BoardAttachVO> attachVOList) {
+        this.attachVOList = attachVOList;
     }
 }

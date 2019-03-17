@@ -3,6 +3,8 @@
 
 <%@ include file="../includes/header.jsp" %>
 
+<link rel="stylesheet" href="/resources/css/upload.css" type="text/css">
+
 
 
 <!-- Page Heading -->
@@ -12,7 +14,7 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Board List Page</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Read Page</h6>
     </div>
 
     <div class="card-body">
@@ -39,8 +41,13 @@
             <input class="form-control" name="writer" value='<c:out value="${boardVO.writer }" />' readonly>
         </div>
 
+        <sec:authentication property="principal" var="pinfo" />
+        <sec:authorize access="isAuthenticated()">
+            <c:if test="${pinfo.username eq boardVO.writer}">
+                <button data-oper='update' class='btn btn-primary'>수정</button>
+            </c:if>
+        </sec:authorize>
 
-        <button data-oper='update' class='btn btn-primary'>수정</button>
         <button data-oper='list' class='btn btn-warning'>목록</button>
 
 
@@ -60,13 +67,35 @@
 </div>
 
 
+<%-- Attach --%>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <span class="m-0 font-weight-bold text-primary">Files</span>
+    </div>
+    <div class="card-body">
+        <div class="uploadedResult">
+            <ul>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="bigPictureWrapper">
+    <div class="bigPicture">
+    </div>
+</div>
+
+
 <%-- Reply section --%>
 <div class="card shadow mb-4">
     <div class="card-header py-3 clearfix">
         <i class="fa fa-comments fa-fw" ></i>
         <span class="m-0 font-weight-bold text-primary">Reply List</span>
 
-        <button id='addReplyBtn' class="btn btn-primary btn-xs float-right">댓글 작성</button>
+        <sec:authorize access="isAuthenticated()">
+            <button id='addReplyBtn' class="btn btn-primary btn-xs float-right">댓글 작성</button>
+        </sec:authorize>
+
     </div>
 
     <div class="card-body">
@@ -101,13 +130,13 @@
 
 
                 <div class="form-group">
-                    <label>Replyer</label>
-                    <input class="form-control" name='replyer' value='replyer' readonly>
+                    <label>Reply</label>
+                    <input class="form-control" name='reply' value='New Reply!!!'>
                 </div>
 
                 <div class="form-group">
-                    <label>Reply</label>
-                    <input class="form-control" name='reply' value='New Reply!!!'>
+                    <label>Replyer</label>
+                    <input class="form-control" name='replyer' value='replyer' readonly>
                 </div>
 
                 <div class="form-group">
@@ -134,230 +163,370 @@
 <script type="text/javascript">
     // reply.js
 
-    var csrfHeaderName = "${_csrf.headerName}";
-    var csrfTokenValue = "${_csrf.token}";
+    $(document).ready(function(){
 
-    $(document).ajaxSend(function(e,xhr,options) {
-        xhr.setRequestHeader(csrfHeaderName, csrfTokenValue)
-    });
+        (function(){
 
-    var bno = "${boardVO.bno}";
-    var replyUL = $(".chat");
-
-    showList(1);
-
-    function showList(currentPage) {
-
-        replyService.getListWithPagination({
-                bno:bno,
-                currentPage:currentPage || 1
-            },
-            function(replyCountInDTO,replyList) {
-                console.log("replyCountInDTO: " + replyCountInDTO);
-                console.log("replyList: " + replyList);
-
-                if(currentPage === -1) {
-                    console.log("currentPage === -1");
-                    pageNum = Math.ceil(replyCountInDTO/10.0);
-                    showList(pageNum);
-                    return;
-                }
-
+            $.getJSON("/board/getListAttach", {bno: "${boardVO.bno}"}, function(attachVOList){
+                console.log("attachVOList: " + attachVOList);
 
                 var str = "";
-                if(replyList == null || replyList.length == 0) {
-                    replyUL.html("");
-                    return;
-                }
-                for(var i=0, len = replyList.length || 0; i<len; i++) {
-                    str += "<li class='clearfix' data-rno='"+ replyList[i].rno+ "'>";
-                    str += "	<div><div class='header'><strong class='primary-font'>"+replyList[i].replyer+"</strong>";
-                    str += "		<small class='float-right'>"+replyService.displayTime(replyList[i].regDate)+"</small></div>";
-                    str += "		<p>"+replyList[i].reply+"</p><hr></div></li>";
-                }
 
-                replyUL.html(str);
+                $(attachVOList).each(function(i, attach){
 
-                showReplyPage(replyCountInDTO);
+                    //image type
+                    if(attach.fileType){
 
-            }); // callback
+                        console.log("image type...");
 
-    } // showList()
+                        var imageThumbnailPath = encodeURIComponent( attach.uploadFolder+ "/s_" + attach.uuid + "_" + attach.fileName);
 
+                        str += "<li data-path='"+attach.uploadFolder+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"
+                            +       "<div>"
+                            +           "<span>" + attach.fileName + "</span>"
+                            +           "<br>"
+                            +           "<img src='/displayImage?fileName="+imageThumbnailPath+"'>"
+                            +       "</div>"
+                            +  "</li>";
 
-    // Reply pagination
-    var pageNum = 1;
+                    } else {
 
-    function showReplyPage(replyCount){
+                        console.log("not image type...");
 
-        var endNum = Math.ceil(pageNum / 10.0) * 10;
-        var startNum = endNum - 9;
+                        str += "<li data-path='"+attach.uploadFolder+"' data-uuid='"+attach.uuid+"' data-filename='"+attach.fileName+"' data-type='"+attach.fileType+"'>"
+                            +       "<div>"
+                            +           "<span>" + attach.fileName + "</span>"
+                            +           "<br>"
+                            +           "<img src='/resources/img/attach.png'>"
+                            +       "</div>"
+                            +  "</li>";
 
-        var prev = startNum != 1;
-        var next = false;
-
-        if(endNum * 10 > replyCount) {
-            endNum = Math.ceil(replyCount/10.0);
-        }
-
-        if(endNum * 10 < replyCount) {
-            next = true;
-        }
-
-        var str = "<ul class='pagination float-right'>";
-
-        if(prev){
-            str += "<li class='page-item'><a class='page-link' href='"+(startNum -1)+"'>Previous</a></li>";
-        }
-
-        for(var i = startNum; i<= endNum; i++){
-            var active = pageNum == i ? "active" : "";
-            str += "<li class='page-item "+active+" '><a class='page-link' href='"+i+"'>"+i+"</a></li>";
-        }
-
-        if(next) {
-            str += "<li class='page-item'><a class='page-link' href='"+(endNum + 1)+"'>Next</a></li>";
-        }
-
-        str += "</ul></div>";
-
-        $(".card-footer").html(str);
-
-    } // showReplyPage()
+                    }
 
 
-    // Click pagination
-    $(".card-footer").on("click", "li a", function(e){
+                }); // end each
 
-        e.preventDefault();
-        console.log("pagination");
+                console.log("str: " + str);
 
-        var targetPageNum = $(this).attr("href");
-        console.log("targetPageNum: " + targetPageNum);
+                $(".uploadedResult ul").html(str);
 
-        pageNum = targetPageNum;
-
-        showList(pageNum);
-
-    });
-
-
-
-    // replyService.insert(
-    //     {reply:"댓글 테스트" + bno, replyer:"작성자" + bno, bno:bno},
-    //     function(result){
-    //         alert("result:" + result);
-    // });
-    //
-    //
-    // replyService.getListWithPagination(
-    //     {bno:bno, currentPage:1},
-    //     function(result){
-    //         for(var i = 0; i < result.length; i++){
-    //             console.log(result[i]);
-    //         }
-    // });
-    //
-    // replyService.remove(9, function(result){
-    //     console.log(result);
-    // }, function(error){
-    //     console.log(error);
-    // });
-    //
-    // replyService.update(
-    //     {rno:5, bno:bno, reply:"댓글5수정"},
-    //     function(result){
-    //         console.log(result);
-    //     });
-    //
-    // replyService.read(8, function(result){
-    //     console.log(result);
-    // });
-
-
-<%--Reply Modal--%>
-
-    var modal = $("#myModal");
-
-    $("#addReplyBtn").on("click",function(e){
-
-        modal.find("input").val("");
-        modal.find("input[name = 'regDate']").closest("div").hide();
-        modal.find("button[id != 'modalCloseBtn']").hide();
-        modal.find("button[id = 'modalRegisterBtn']").show();
-
-        $("#myModal").modal("show");
-    });
-
-    $("#modalRegisterBtn").click(function(e){
-        replyService.insert(
-            {reply: $("input[name=reply]").val(), replyer: $("input[name=replyer]").val(), bno: "${boardVO.bno}"},
-            function(result){
-               console.log("result: " + result);
-               modal.find("input").val("");
-               modal.modal("hide");
-
-               showList(-1);
             });
-    });
 
-    // .chat = replyUL
-    $(".chat").on("click", "li", function(){
-        var rno = $(this).data("rno");
+        })(); // Immediate function
 
-        replyService.read(rno, function(result){
 
-            $("input[name=reply]").val(result.reply);
-            $("input[name=replyer]").val(result.replyer);
-            $("input[name=regDate]").val(replyService.displayTime(result.regDate));
-            $("#myModal").data("rno", result.rno);
+        $(".uploadedResult").on("click", "li", function(e){
 
+            console.log("li clicked...");
+            var liObj = $(this);
+
+            var path = encodeURIComponent(liObj.data("path") + "/" + liObj.data("uuid") + "_" + liObj.data("filename"));
+
+            if(liObj.data("type")){
+                console.log("image type...");
+                showImage(path);
+
+            } else{
+                console.log("not image type...");
+                self.location = "/downloadFile?fileName=" + path;
+
+            }
+
+        }); // uploadedResult
+
+
+        function showImage(filePath) {
+
+            console.log("filePath: " + filePath);
+
+            $(".bigPictureWrapper").css("display", "flex");
+            $(".bigPicture").html("<img src='/displayImage?fileName="+filePath+"'>")
+                            .animate({width:'100%', height:'100%'}, 1000);
+
+        } // showImage
+
+
+        $(".bigPictureWrapper").on("click", function(e){
+
+            $(".bigPicture").animate({width:'0%', height: '0%'}, 0);
+
+            var myTimeout = setTimeout(function(){
+
+                $(".bigPictureWrapper").hide();
+                clearTimeout(myTimeout);
+
+            }, 0);
+
+
+        });
+
+
+
+        $(document).ajaxSend(function(e,xhr,options) {
+            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        });
+
+        var bno = "${boardVO.bno}";
+        var replyUL = $(".chat");
+
+        showList(1);
+
+        function showList(currentPage) {
+
+            replyService.getListWithPagination({
+                    bno:bno,
+                    currentPage:currentPage || 1
+                },
+                function(replyCountInDTO,replyList) {
+                    console.log("replyCountInDTO: " + replyCountInDTO);
+                    console.log("replyList: " + replyList);
+
+                    if(currentPage === -1) {
+                        console.log("currentPage === -1");
+                        pageNum = Math.ceil(replyCountInDTO/10.0);
+                        showList(pageNum);
+                        return;
+                    }
+
+
+                    var str = "";
+                    if(replyList == null || replyList.length == 0) {
+                        replyUL.html("");
+                        return;
+                    }
+                    for(var i=0, len = replyList.length || 0; i<len; i++) {
+                        str += "<li class='clearfix' data-rno='"+ replyList[i].rno+ "'>";
+                        str += "	<div><div class='header'><strong class='primary-font'>"+replyList[i].replyer+"</strong>";
+                        str += "		<small class='float-right'>"+replyService.displayTime(replyList[i].regDate)+"</small></div>";
+                        str += "		<p>"+replyList[i].reply+"</p><hr></div></li>";
+                    }
+
+                    replyUL.html(str);
+
+                    showReplyPage(replyCountInDTO);
+
+                }); // callback
+
+        } // showList()
+
+
+        // Reply pagination
+        var pageNum = 1;
+
+        function showReplyPage(replyCount){
+
+            var endNum = Math.ceil(pageNum / 10.0) * 10;
+            var startNum = endNum - 9;
+
+            var prev = startNum != 1;
+            var next = false;
+
+            if(endNum * 10 > replyCount) {
+                endNum = Math.ceil(replyCount/10.0);
+            }
+
+            if(endNum * 10 < replyCount) {
+                next = true;
+            }
+
+            var str = "<ul class='pagination float-right'>";
+
+            if(prev){
+                str += "<li class='page-item'><a class='page-link' href='"+(startNum -1)+"'>Previous</a></li>";
+            }
+
+            for(var i = startNum; i<= endNum; i++){
+                var active = pageNum == i ? "active" : "";
+                str += "<li class='page-item "+active+" '><a class='page-link' href='"+i+"'>"+i+"</a></li>";
+            }
+
+            if(next) {
+                str += "<li class='page-item'><a class='page-link' href='"+(endNum + 1)+"'>Next</a></li>";
+            }
+
+            str += "</ul></div>";
+
+            $(".card-footer").html(str);
+
+        } // showReplyPage()
+
+
+        // Click pagination
+        $(".card-footer").on("click", "li a", function(e){
+
+            e.preventDefault();
+            console.log("pagination");
+
+            var targetPageNum = $(this).attr("href");
+            console.log("targetPageNum: " + targetPageNum);
+
+            pageNum = targetPageNum;
+
+            showList(pageNum);
+
+        });
+
+
+        // replyService.insert(
+        //     {reply:"댓글 테스트" + bno, replyer:"작성자" + bno, bno:bno},
+        //     function(result){
+        //         alert("result:" + result);
+        // });
+        //
+        //
+        // replyService.getListWithPagination(
+        //     {bno:bno, currentPage:1},
+        //     function(result){
+        //         for(var i = 0; i < result.length; i++){
+        //             console.log(result[i]);
+        //         }
+        // });
+        //
+        // replyService.remove(9, function(result){
+        //     console.log(result);
+        // }, function(error){
+        //     console.log(error);
+        // });
+        //
+        // replyService.update(
+        //     {rno:5, bno:bno, reply:"댓글5수정"},
+        //     function(result){
+        //         console.log(result);
+        //     });
+        //
+        // replyService.read(8, function(result){
+        //     console.log(result);
+        // });
+
+
+        <%--Reply Modal--%>
+
+        var replyer = null;
+        <sec:authorize access="isAuthenticated()">
+            replyer = "<sec:authentication property="principal.username" />";
+        </sec:authorize>
+
+        var modal = $("#myModal");
+
+        $("#addReplyBtn").on("click",function(e){
+
+            modal.find("input").val("");
+            modal.find("input[name = 'regDate']").closest("div").hide();
             modal.find("button[id != 'modalCloseBtn']").hide();
-            modal.find("button[id = 'modalModBtn']").show();
-            modal.find("button[id = 'modalRemoveBtn']").show();
+            modal.find("button[id = 'modalRegisterBtn']").show();
+
+            modal.find("input[name='replyer']").val(replyer);
 
             $("#myModal").modal("show");
         });
-    });
 
-    $("#modalModBtn").click(function(){
-        replyService.update({rno: modal.data("rno"), reply: $("input[name=reply]").val()},
-            function(result){
-                console.log(result);
-                modal.find("input").val("");
-                modal.modal("hide");
-                showList(pageNum);
+        $("#modalRegisterBtn").click(function(e){
+            replyService.insert(
+                {reply: $("input[name=reply]").val(), replyer: $("input[name=replyer]").val(), bno: "${boardVO.bno}"},
+                function(result){
+                    console.log("result: " + result);
+                    modal.find("input").val("");
+                    modal.modal("hide");
+
+                    showList(-1);
+                });
+        });
+
+        // .chat = replyUL
+        $(".chat").on("click", "li", function(){
+            var rno = $(this).data("rno");
+
+            replyService.read(rno, function(result){
+
+                $("input[name=reply]").val(result.reply);
+                $("input[name=replyer]").val(result.replyer);
+                $("input[name=regDate]").val(replyService.displayTime(result.regDate));
+                $("#myModal").data("rno", result.rno);
+
+                modal.find("button[id != 'modalCloseBtn']").hide();
+                modal.find("button[id = 'modalModBtn']").show();
+                modal.find("button[id = 'modalRemoveBtn']").show();
+
+                $("#myModal").modal("show");
             });
-    });
+        });
 
-    $("#modalRemoveBtn").click(function(){
-        replyService.remove(modal.data("rno"),
-            function(result){
-                console.log(result);
-                modal.find("input").val("");
+        $("#modalModBtn").click(function(){
+
+            if(!replyer) {
+                alert("로그인이 필요합니다.");
                 modal.modal("hide");
-                showList(pageNum);
-            });
-    });
+                return;
+            } else if(modal.find("input[name='replyer']").val() != replyer){
+                alert("본인의 댓글만 수정이 가능합니다.");
+                modal.modal("hide");
+                return;
+            }
 
-    $("#modalCloseBtn").click(function(){
-        modal.find("input").val("");
-        modal.modal("hide");
-    });
+            var reply = {
+                rno: modal.data("rno"),
+                reply: $("input[name=reply]").val(),
+                replyer: modal.find("input[name='replyer']").val()
+            };
+
+
+
+            replyService.update(reply,
+                function(result){
+                    console.log(result);
+                    modal.find("input").val("");
+                    modal.modal("hide");
+                    showList(pageNum);
+                });
+        });
+
+        $("#modalRemoveBtn").click(function(){
+
+            if(!replyer) {
+                alert("로그인이 필요합니다.");
+                modal.modal("hide");
+                return;
+            } else if(modal.find("input[name='replyer']").val() != replyer){
+                alert("본인의 댓글만 삭제가 가능합니다.");
+                modal.modal("hide");
+                return;
+            }
+
+            replyService.remove(modal.data("rno"), modal.find("input[name='replyer']").val(),
+                function(result){
+                    console.log(result);
+                    modal.find("input").val("");
+                    modal.modal("hide");
+                    showList(pageNum);
+                });
+        });
+
+        $("#modalCloseBtn").click(function(){
+            modal.find("input").val("");
+            modal.modal("hide");
+        });
+
+
+    }); // ready
+
 </script>
 
 
 <script type="text/javascript">
 
-    var operForm = $("#operForm");
-    $("button[data-oper='update']").click(function(e){
-        operForm.submit();
-    });
+    $(document).ready(function(){
 
-    $("button[data-oper='list']").click(function(e){
-       operForm.find("#bno").remove();
-       operForm.attr("action", "/board/list");
-       operForm.submit();
+        var operForm = $("#operForm");
+        $("button[data-oper='update']").click(function(e){
+            operForm.submit();
+        });
+
+        $("button[data-oper='list']").click(function(e){
+            operForm.find("#bno").remove();
+            operForm.attr("action", "/board/list");
+            operForm.submit();
+        });
+
     });
 
 </script>

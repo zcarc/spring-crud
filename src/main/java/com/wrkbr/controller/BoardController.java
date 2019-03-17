@@ -1,5 +1,6 @@
 package com.wrkbr.controller;
 
+import com.wrkbr.domain.BoardAttachVO;
 import com.wrkbr.domain.BoardVO;
 import com.wrkbr.domain.Criteria;
 import com.wrkbr.domain.PageDTO;
@@ -7,10 +8,20 @@ import com.wrkbr.service.BoardService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/board/*")
@@ -37,14 +48,20 @@ public class BoardController {
     }
 
     @GetMapping("/insert")
+    @PreAuthorize("isAuthenticated()")
     public void insert(){
         log.info("Get insert()...");
     }
 
 
     @PostMapping("/insert")
+    @PreAuthorize("isAuthenticated()")
     public String insert(BoardVO boardVO, RedirectAttributes redirectAttributes){
         log.info("insert()...");
+        log.info("boardVO: " + boardVO);
+
+        if(boardVO.getAttachVOList() != null)
+            boardVO.getAttachVOList().forEach(log::info);
 
         log.info("before insertSelectKey..." + boardVO.getBno());
         boardService.insertSelectKey(boardVO);
@@ -63,6 +80,7 @@ public class BoardController {
 
 
     @PostMapping("/update")
+    @PreAuthorize("principal.username == #boardVO.writer")
     public String update(BoardVO boardVO, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes redirectAttributes){
         log.info("Post update()...");
 
@@ -73,14 +91,72 @@ public class BoardController {
     }
 
     @PostMapping("/delete")
-    public String delete(Long bno, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes redirectAttributes){
+    @PreAuthorize("principal.username == #writer")
+    public String delete(Long bno, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes redirectAttributes, String writer){
         log.info("delete()...");
         log.info("bno: " + bno);
 
-        if(boardService.delete(bno))
-            redirectAttributes.addFlashAttribute("result","successfully deleted");
+        List<BoardAttachVO> boardAttachVOList = boardService.getListAttach(bno);
+        log.info("boardAttachVOList: " + boardAttachVOList);
+
+        // boardAttachMapper.deleteAll(bno);
+        // boardMapper.delete(bno);
+        if(boardService.delete(bno) && (boardAttachVOList != null || boardAttachVOList.size() > 0)) {
+
+            // Physical deletion.
+            deleteFiles(boardAttachVOList);
+
+            redirectAttributes.addFlashAttribute("result", "successfully deleted");
+        }
 
         return "redirect:/board/list" + criteria.getListLink();
+    }
+
+    @GetMapping(value = "/getListAttach", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseEntity<List<BoardAttachVO>> getListAttach(Long bno){
+        log.info("getListAttach... bno" + bno);
+        return new ResponseEntity<>(boardService.getListAttach(bno), HttpStatus.OK);
+    }
+
+
+    // Called this method when called delete mapping.
+    // Physical deletion.
+    private void deleteFiles(List<BoardAttachVO> attachList) {
+        log.info("deleteFiles...");
+        log.info("attachList: " + attachList);
+
+        if(attachList == null || attachList.size() <= 0) {
+            log.info("attachList doesn't exist.");
+            return;
+        }
+
+        attachList.forEach(attach -> {
+            try {
+
+                Path file = Paths.get("C:\\upload\\" + attach.getUploadFolder() + "\\" + attach.getUuid() + "_" + attach.getFileName());
+                log.info("Path file = Paths.get(\"C:\\\\upload\\\\\" + attach.getUploadFolder() + \"\\\\\" + attach.getUuid() + \"_\" + attach.getFileName()): " + file);
+
+                boolean deletedFile = Files.deleteIfExists(file);
+                log.info("Files.deleteIfExists(file): " + deletedFile);
+
+
+                if(Files.probeContentType(file).startsWith("image")) {
+
+                    Path thumbnail = Paths.get("C:\\upload\\" + attach.getUploadFolder() + "\\s_" + attach.getUuid() + "_" + attach.getFileName());
+                    log.info("Path thumbnail = Paths.get(\"C:\\\\upload\\\\\" + attach.getUploadPath() + \"\\\\s_\" + attach.getUuid() + \"_\" + attach.getFileName()): " + thumbnail);
+
+                    boolean deletedThumbnail = Files.deleteIfExists(thumbnail);
+                    log.info("Files.deleteIfExists(thumbnail): " + deletedThumbnail);
+
+                }
+
+            }catch (Exception e) {
+                log.info("delete file error: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        });
     }
 
 

@@ -1,0 +1,80 @@
+/**
+ *   upload.css
+ */
+
+
+.uploadedResult {
+
+    width:100%;
+
+}
+
+.uploadedResult ul {
+
+    display:flex;
+    flex-flow:row;
+    justify-content: center;
+    align-items:center;
+
+}
+
+.uploadedResult ul li {
+
+    list-style: none;
+    padding: 10px;
+    justify-content: center;
+    align-items:center;
+
+}
+
+.uploadedResult ul li img {
+
+    width: 180px;
+    height: 90px;
+
+    border: 1px solid white;
+    padding: 3px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.uploadedResult ul li span {
+
+    color: black;
+}
+
+.bigPictureWrapper {
+
+    position:absolute;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    top:0;
+    width:80%;
+    height:100%;
+    background-color:gray;
+    z-index:100;
+    background:rgba(255,255,255,0.5);
+}
+
+.bigPicture {
+
+    position: relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+.bigPicture img {
+
+    width:600px;
+    display:block;
+
+    border: 1px solid white;
+    padding: 3px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#closeBtn {
+    float: right;
+}

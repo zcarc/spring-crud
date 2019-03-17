@@ -1,6 +1,7 @@
 package com.wrkbr.controller;
 
 import lombok.extern.log4j.Log4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -33,5 +34,10 @@ public class SampleController {
         return "/sample/admin";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_MEMBER')")
+    @GetMapping("/annoMember")
+    public void doMember2() {
+        log.info("logined");
+    }
 }
 

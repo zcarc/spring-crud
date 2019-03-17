@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class CustomUser extends User {
 
 
-    private UserVO vo;
+    private UserVO boardVO;
 
 
     public CustomUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -19,16 +19,16 @@ public class CustomUser extends User {
     }
 
 
-    public CustomUser(UserVO vo) {
-        super(vo.getUserid(), vo.getUserpw(), vo.getAuthList().stream()
+    public CustomUser(UserVO boardVO) {
+        super(boardVO.getUserid(), boardVO.getUserpw(), boardVO.getAuthList().stream()
                                                                 .map( auth -> new SimpleGrantedAuthority(auth.getAuth()) )
                                                                 .collect(Collectors.toList())
                                                                 );
-        this.vo = vo;
+        this.boardVO = boardVO;
     }
 
 
-    public UserVO getVo() {
-        return vo;
+    public UserVO getBoardVO() {
+        return boardVO;
     }
 }

@@ -9,9 +9,9 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/replies")
@@ -22,6 +22,7 @@ public class ReplyController {
     private ReplyService replyService;
 
     @PostMapping(value = "/insert", consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> insert (@RequestBody ReplyVO replyVO) {
         log.info("replyVO: " + replyVO);
 
@@ -48,8 +49,9 @@ public class ReplyController {
     }
 
     @DeleteMapping(value = "/{rno}", produces = {MediaType.TEXT_PLAIN_VALUE})
-    public ResponseEntity<String> delete(@PathVariable("rno") Long rno) {
-        log.info("delete()..." + " rno: " + rno);
+    @PreAuthorize("principal.username == #replyVO.replyer")
+    public ResponseEntity<String> delete(@PathVariable("rno") Long rno, @RequestBody ReplyVO replyVO) {
+        log.info("delete()..." + " rno: " + rno + " replyVO.replyer: " + replyVO.getReplyer());
 
         int result = replyService.delete(rno);
         return result == 1
@@ -59,6 +61,7 @@ public class ReplyController {
 
     @RequestMapping(value = "/{rno}", method = {RequestMethod.PUT, RequestMethod.PATCH},
                     consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
+    @PreAuthorize("principal.username == #replyVO.replyer")
     public ResponseEntity<String> update (@RequestBody ReplyVO replyVO, @PathVariable("rno") Long rno){
         log.info("update()..." + " replyVO: " + replyVO + " rno: " + rno);
 

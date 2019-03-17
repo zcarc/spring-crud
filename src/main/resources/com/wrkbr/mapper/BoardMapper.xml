@@ -47,9 +47,9 @@
     </select>
 
 
-    <insert id="insert">
-        insert into board(title, content, writer) values(#{title}, #{content}, #{writer})
-    </insert>
+    <!--<insert id="insert">-->
+        <!--insert into board(title, content, writer) values(#{title}, #{content}, #{writer})-->
+    <!--</insert>-->
 
     <update id="updateReplyCount">
         update board set replyCount = replyCount + #{amount} where bno = ${bno}

@@ -1,9 +1,11 @@
 package com.wrkbr.domain;
 
 import lombok.ToString;
+import lombok.extern.log4j.Log4j;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @ToString
+@Log4j
 public class Criteria {
 
     private int currentPage;
@@ -69,6 +71,8 @@ public class Criteria {
                 .queryParam("displayRecords", this.displayRecords)
                 .queryParam("type", this.type)
                 .queryParam("keyword", this.keyword);
+
+        log.info("getListLink...  UriComponentsBuilder : " + builder.toUriString() );
 
         return builder.toUriString();
     }
