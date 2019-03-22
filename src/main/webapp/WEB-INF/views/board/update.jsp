@@ -190,10 +190,9 @@
                         +  "<input type='hidden' name='attachVOList["+i+"].uuid' value='"+obj.data("uuid")+"'>"
                         +  "<input type='hidden' name='attachVOList["+i+"].fileName' value='"+obj.data("filename")+"'>"
                         +  "<input type='hidden' name='attachVOList["+i+"].fileType' value='"+obj.data("type")+"'>";
-
                 });
 
-                alert("str: " + str);
+                //alert("str: " + str);
 
                 $("form").append(str);
                 $("form").submit();
@@ -319,7 +318,7 @@
 
         //console.log("delete file...");
 
-        if(confirm("Remove this file?")){
+        if(confirm("해당 파일을 삭제하시겠습니까?")){
 
             var targetLi = $(this).closest("li");
             targetLi.remove();

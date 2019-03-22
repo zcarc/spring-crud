@@ -21,7 +21,13 @@
 
     } else {
         alert('회원 가입에 실패 했습니다.');
-        location="/register";
+
+        var platformId = "${platformId}";
+
+        if(!platformId)
+            location="/register";
+        else
+            location="/register?platformId=" + platformId;
     }
 
 

@@ -48,6 +48,7 @@
             </c:if>
         </sec:authorize>
 
+
         <button data-oper='list' class='btn btn-warning'>목록</button>
 
 
@@ -92,9 +93,7 @@
         <i class="fa fa-comments fa-fw" ></i>
         <span class="m-0 font-weight-bold text-primary">Reply List</span>
 
-        <sec:authorize access="isAuthenticated()">
-            <button id='addReplyBtn' class="btn btn-primary btn-xs float-right">댓글 작성</button>
-        </sec:authorize>
+        <button id='addReplyBtn' class="btn btn-primary btn-xs float-right">댓글 작성</button>
 
     </div>
 
@@ -245,7 +244,7 @@
 
             $(".bigPictureWrapper").css("display", "flex");
             $(".bigPicture").html("<img src='/displayImage?fileName="+filePath+"'>")
-                            .animate({width:'100%', height:'100%'}, 1000);
+                            .animate({width:'100%', height:'100%'}, 100);
 
         } // showImage
 
@@ -416,7 +415,16 @@
 
         var modal = $("#myModal");
 
+
+        // 댓글 작성 버튼 클릭 시
         $("#addReplyBtn").on("click",function(e){
+
+            <sec:authorize access="isAnonymous()">
+                if(confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")){
+                    location = "/customLogin";
+                }
+                return;
+            </sec:authorize>
 
             modal.find("input").val("");
             modal.find("input[name = 'regDate']").closest("div").hide();

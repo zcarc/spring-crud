@@ -13,11 +13,11 @@ import java.util.List;
 public class UserVO {
 
     @Id
-    @Pattern(regexp="[A-Za-z0-9+]{5,10}", message="영문,숫자만 포함해서 5~10자만 입력할 수 있습니다.")
+    @Pattern(regexp="[A-Za-z0-9+]{5,50}", message="영문,숫자로 최소 5자리부터 입력하세요.")
     private String userid;
 
     @Column
-    @Pattern(regexp="\\S{6,13}", message="패스워드는 공백 없이 6~20자로 입력하세요.")
+    @Pattern(regexp="^[a-zA-Z0-9]{6,15}$", message="패스워드는 숫자와 영문자로 6~15자리까지 입력하세요.")
     private String userpw;
 
     @Column

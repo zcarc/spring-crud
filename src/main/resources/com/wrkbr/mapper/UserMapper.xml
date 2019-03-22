@@ -49,4 +49,39 @@
     </insert>
 
 
+    <insert id="insertPlatformUser">
+        insert into user_table(userid, userpw) values(#{id}, #{pw})
+    </insert>
+
+    <insert id="insertPlatformAuth">
+      insert into user_table_auth(userid, auth) values(#{id}, #{auth})
+    </insert>
+
+    <insert id="insertPlatformTable">
+        insert into user_table_platform (userid, kakao_id, ka_generate, facebook_id, fb_generate, google_id, gg_generate)
+        values(#{userid}, #{kakao_id}, #{ka_generate}, #{facebook_id}, #{fb_generate}, #{google_id}, #{gg_generate})
+    </insert>
+
+    <select id="selectPrefix" resultType="String">
+
+      select
+
+        <choose>
+            <when test="kakao_id != null">
+                ka_generate
+            </when>
+            <when test="facebook_id != null">
+                fb_generate
+            </when>
+            <when test="google_id != null">
+                gg_generate
+            </when>
+        </choose>
+
+        from user_table_platform where kakao_id = #{kakao_id} or facebook_id = #{facebook_id} or google_id = #{google_id}
+
+    </select>
+
+
+
 </mapper>

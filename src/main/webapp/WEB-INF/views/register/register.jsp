@@ -55,13 +55,12 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">회원가입</h1>
                                     <span style="color:red;">
-                                        <p>${logout}</p>
-                                        <p>${error}</p>
                                     </span>
                                 </div>
 
                                 <form:form modelAttribute="userVO" id="frm"
                                            onsubmit="return checkSpaces()">
+
 
                                     <div class="form-group row">
                                         <form:input path="username" class="form-control" id="username" placeholder="이름"/>
@@ -76,13 +75,12 @@
 
 
                                     <div class="form-group row">
-                                        <form:input path="userpw" id="userpw" class="form-control" autocomplete="off" placeholder="비밀번호"/>
+                                        <form:password path="userpw" id="userpw" class="form-control" autocomplete="off" placeholder="비밀번호" showPassword="false" />
                                         <form:errors path="userpw" class="danger"/>
                                     </div>
 
 
                                     <div class="form-group row">
-
                                         <div class="input-group">
                                             <form:input path="userEmail" id="userEmail" class="form-control" autocomplete="true" placeholder="이메일"/>
                                             <div class="input-group-append">
@@ -171,7 +169,11 @@
 
 <script type="text/javascript">
     //DOM 로드 후 자동 실행
-    $("#userpw").attr('type', 'password');
+    if($("#userpw").val()){
+        $("#userpw").attr('type', 'password').val('');
+    }
+
+
 
     $("input[id^='u']").each(function(e,i){
 
@@ -216,13 +218,15 @@
                     success : function(result){
                         console.log("result: " + result);
                         if(result == "success") {
-                            alert("인증 메일을 발송하였습니다.");
+                            //alert("인증 메일을 발송하였습니다.");
                         } else {
-                            alert("인증 메일 발송에 실패했습니다.");
+                            //alert("인증 메일 발송에 실패했습니다.");
                         }
                     } // success
 
                 }); // ajax
+
+                alert("인증 메일이 발송되었습니다.")
 
             } // if
 
@@ -233,12 +237,6 @@
     /**************************************************************************************/
 
 
-    /**************************************************************************************/
-    //로그인 페이지로 이동
-    function toLoginPage() {
-        self.location = "login";
-    }
-    /**************************************************************************************/
 
 
     /********************************************************************************************************/
@@ -249,7 +247,7 @@
         var spacesRemoved = "";
 
 
-        $("input[id^='u']").each(function(e,i){
+        $("input[id^='u']").each(function(i,e){
 
             if( $(this).val().search(/\s/) != -1 | $(this).val() != ""  ) {
 
@@ -263,11 +261,12 @@
 
 
         if( $("#username").val().search(/^[^가-힣]+$/) != -1 ) {
-            alert("이름은 한글로 입력해주세요.");
+            //alert("이름은 한글로 입력해주세요.");
             var KorRemoved = $("#username").val().replace(/^[^가-힣]+$/, "");
             $("#username").val(KorRemoved);
 
             return false;
+
 
         }//if
 

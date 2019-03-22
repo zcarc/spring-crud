@@ -3,6 +3,7 @@ package com.wrkbr.controller;
 import com.wrkbr.domain.UserVO;
 import com.wrkbr.email.EmailChecker;
 import com.wrkbr.email.GmailSender;
+import com.wrkbr.mapper.UserMapper;
 import com.wrkbr.service.UserService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -33,9 +34,13 @@ public class UserController {
     @Setter(onMethod_ = @Autowired)
     private PasswordEncoder pwEncoder;
 
+    @Setter(onMethod_ = @Autowired)
+    private UserMapper userMapper;
 
     @Setter(onMethod_ = @Autowired)
     private UserService userService;
+
+
 
     // key: hashKey, checkedKey
     private static Map<String, EmailChecker> emailCheckerMap = new HashMap<>();
@@ -57,10 +62,6 @@ public class UserController {
        log.info("register POST...");
 
         log.info("UserVO:" + vo);
-
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        PrintWriter printWriter = null;
 
 
         if(result.hasErrors()) {
@@ -100,12 +101,15 @@ public class UserController {
 
                 } else {
                     model.addAttribute("result", "X");
+//                    String kakao_uuid = userMapper.checkUuid(vo.getUserid());
+//                    if(kakao_uuid != null) {
+//                        model.addAttribute("platformId", kakao_uuid);
+//                    }
                 }
 
                 return "register/resultSignUp";
 
             } catch(Exception e) {
-
                 model.addAttribute("result", "X");
                 return "register/resultSignUp";
             }

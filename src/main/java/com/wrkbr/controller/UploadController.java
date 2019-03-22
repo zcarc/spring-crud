@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -173,8 +172,6 @@ public class UploadController {
         String removedUUIDFileName = resourceFileName.substring(resourceFileName.indexOf("_") + 1);
 
         try {
-            headers.add("Content-Disposition",
-                        "attachment; filename=" + new String(removedUUIDFileName.getBytes("UTF-8"), "ISO-8859-1"));
 
             String encodedDownFileName = null;
 
@@ -191,13 +188,18 @@ public class UploadController {
 
             } else {
                 log.info("Chrome browser");
-                encodedDownFileName = new String(removedUUIDFileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+                encodedDownFileName = new String(removedUUIDFileName.getBytes("UTF-8"), "ISO-8859-1");
             }
+            log.info("resourceFileName - : " + resourceFileName);
             log.info("encodedDownFileName - : " + encodedDownFileName);
             log.info("removedUUIDFileName - : " + removedUUIDFileName);
 
+
             // Set FileName
-            headers.add("Content-Disposition", "attachment; filename=" + encodedDownFileName);
+            headers.add("Content-Disposition", "attachment; filename=\"" + encodedDownFileName +"\"");
+
+            log.info("headers.getContentDisposition(): " + headers.getContentDisposition());
+
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
