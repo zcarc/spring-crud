@@ -151,10 +151,21 @@
                 }
 
               // 닉네임을 수정하지 않고 submit 한 경우
+
             } else if(usernickname === $("#usernickname").val()){
 
+
+                // 소셜 사용자인 경우 비밀번호가 필요없음
+                if(social === "true"){
+
+                    alert("변경된 정보가 없습니다.");
+                    history.go(-1);
+                    return;
+
+                }
+
                 // 비밀번호 체크
-                if(!$("#userpw").val() || $("#userpw").val().length < 6){
+                else if(!$("#userpw").val() || $("#userpw").val().length < 6){
                     alert("비밀번호는 6자리 이상입니다.");
                     return;
                 }
