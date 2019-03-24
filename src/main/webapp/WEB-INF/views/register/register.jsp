@@ -276,7 +276,7 @@
         }//if
 
         if(idVerify === false){
-            alert("아이디 중복 확인이 필요합니다.");
+            alert("아이디를 확인하세요.");
             return false;
         }
 
