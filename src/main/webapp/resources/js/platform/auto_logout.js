@@ -1,18 +1,18 @@
 
 
 
-console.log("로그아웃 되었습니다.");
+//console.log("로그아웃 되었습니다.");
 
 
 // 카카오 로그아웃
 Kakao.Auth.getStatus(function(statusObj) {
-    console.log("Kakao status: " + JSON.stringify(statusObj));
+    //console.log("Kakao status: " + JSON.stringify(statusObj));
 
     if (statusObj.status == "connected") {
-        console.log("statusObj.status == \"connected\": " + statusObj.status);
+        //console.log("statusObj.status == \"connected\": " + statusObj.status);
 
         Kakao.Auth.logout(function () {
-            console.log("Kakao logout...");
+            //console.log("Kakao logout...");
         });
     } // if
 
@@ -27,7 +27,7 @@ var fSetTimeout = setTimeout(function(){
         if (response.status === 'connected') {
 
             FB.logout(function(response) {
-                console.log("FB logout...");
+                //console.log("FB logout...");
             });
         }
     });
@@ -42,7 +42,7 @@ var gSetTimeout = setTimeout(function(){
     if(gauth.isSignedIn.get()){
 
         gauth.signOut().then(function(){
-            console.log("구글 자동 로그아웃");
+            //console.log("구글 자동 로그아웃");
         });
     }
 

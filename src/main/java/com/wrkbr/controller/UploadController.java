@@ -3,6 +3,7 @@ package com.wrkbr.controller;
 import com.wrkbr.domain.AttachDTO;
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
+import org.json.JSONObject;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -14,15 +15,14 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @Log4j
@@ -45,7 +45,11 @@ public class UploadController {
         File uploadFolder = new File("C:\\upload", todayDateFolder);
         log.info("File uploadFolder = new File(\"C:\\\\upload\", getFolder()): " + uploadFolder);
 
+        // 경로의 폴더가 물리적으로 존재한다면 : true
         if(!uploadFolder.exists()) {
+
+            // mkdir: 현재 경로의 폴더 생성
+            // *부모경로("C:\\upload")가 없을 경우 fail
             uploadFolder.mkdir();
         }
 
@@ -60,13 +64,18 @@ public class UploadController {
             log.info("substring fileName - : " + fileName);
 
 
+
             UUID uuid = UUID.randomUUID();
             String fileNameWithUUID = uuid.toString() + "_" + fileName;
             log.info("fileName = uuid.toString() + \"_\" + fileName - : " + fileName);
 
 
             try {
+                // 오늘 날짜 폴더 + UUID가 포함된 기존 파일 이름
                 File newFile = new File(uploadFolder, fileNameWithUUID);
+
+                // 현재 이 파일을 새로 생성된 경로로 복사한다.
+                // 기존에 파일이 있다면 삭제하고 새로 생성한다.
                 multipartFile.transferTo(newFile);
 
                 AttachDTO attachDTO = new AttachDTO();
@@ -257,5 +266,108 @@ public class UploadController {
         return new ResponseEntity<String>("deleted", HttpStatus.OK);
 
     }
+
+    @PostMapping("/ckUploding")
+    public void ckUploding(HttpServletRequest req, HttpServletResponse res, @RequestParam MultipartFile upload) throws Exception {
+        log.info("ckUploding...");
+        log.info("MultipartFile: " + upload);
+
+        // 랜덤 문자 생성
+        UUID uuid = UUID.randomUUID();
+
+        OutputStream out = null;
+        PrintWriter printWriter = null;
+
+        // 인코딩
+        res.setCharacterEncoding("utf-8");
+        res.setContentType("application/json");
+
+        try {
+
+            String fileName = upload.getOriginalFilename();  // 파일 이름 가져오기
+
+            // 파일을 쓰기 위해서 바이트 값 가져옴
+            byte[] bytes = upload.getBytes();
+
+            String uploadPath = "C:\\BoardApp\\src\\main\\webapp\\resources";
+
+            // 업로드 경로
+            String ckUploadPath = uploadPath + File.separator + "ckUpload" + File.separator + uuid + "_" + fileName;
+            System.out.println("ckUploadPath: " + ckUploadPath);
+
+            out = new FileOutputStream(new File(ckUploadPath));
+            out.write(bytes);
+            out.flush();
+
+
+            String callback = req.getParameter("CKEditorFuncNum");
+            if(callback == null) {
+                System.out.println("callback is null.");
+                callback = "1";
+            }
+
+
+            System.out.println("callback: " + callback);
+
+            printWriter = res.getWriter();
+            String fileUrl = "/resources/ckUpload/" + uuid + "_" + fileName;  // 작성화면
+            System.out.println("fileUrl: " + fileUrl);
+
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("uploaded", 1);
+            jsonObject.put("filename", fileName);
+            jsonObject.put("url", "/showCkImage?fileName=" + uuid + "_" +fileName);
+
+            printWriter.print(jsonObject.toString());
+
+            // 업로드시 메시지 출력
+//						printWriter.println("<script type='text/javascript'>"
+//									+ "window.parent.CKEDITOR.tools.callFunction("
+//									+ callback+",'"+ fileUrl+"','이미지를 업로드하였습니다.')"
+//									+"</script>");
+
+            printWriter.flush();
+
+
+        } catch (IOException e) { e.printStackTrace();
+        } finally {
+            try {
+                if(out != null) { out.close(); }
+                if(printWriter != null) { printWriter.close(); }
+            } catch(IOException e) { e.printStackTrace(); }
+        }
+
+
+    } // ckUploding
+
+
+
+    // ckImage 출력
+    @GetMapping("/showCkImage")
+    public ResponseEntity<byte[]> showCkImage(String fileName){
+        log.info("showCkImage... fileName: " + fileName);
+
+        File file = new File("C:\\BoardApp\\src\\main\\webapp\\resources\\ckUpload\\" + fileName);
+        //log.info("C:\\BoardApp\\src\\main\\webapp\\resources\\\" + fileName : " + file);
+
+        ResponseEntity<byte[]> result = null;
+
+        try{
+            HttpHeaders header = new HttpHeaders();
+
+            header.add("Content-Type", Files.probeContentType(file.toPath()));
+
+            if(file.exists())
+                result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }// ckImage()
+
+
 
 }

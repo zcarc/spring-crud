@@ -14,7 +14,7 @@ window.fbAsyncInit = function() {
         version : 'v3.2'
     });
 
-    console.log("FB.init...");
+    //console.log("FB.init...");
 
 };
 
@@ -25,7 +25,7 @@ window.fbAsyncInit = function() {
     js.src = "https://connect.facebook.net/ko_KR/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 
-    console.log("(function(d, s, id)..");
+    //console.log("(function(d, s, id)..");
 
 }(document, 'script', 'facebook-jssdk'));
 
@@ -42,7 +42,6 @@ $("#fbLogin").click(function(e){
 
             if(confirm("현재 로그인 상태입니다. 로그아웃 하시겠습니까?")){
                 FB.logout(function(response) {
-                    location.reload(true);
                 });
 
             } // if
@@ -65,9 +64,6 @@ $("#fbLogin").click(function(e){
                             }),
                             dataType: 'JSON',
                             contentType: "application/json; charset=utf-8",
-                            beforeSend: function(xhr){
-                                xhr.setRequestHeader(getCsrf().csrfHeaderName, getCsrf().csrfToken);
-                            },
                             success: function(result){
 
                                 //alert("result: " + JSON.stringify(result));
@@ -133,23 +129,23 @@ function checkStatusAndLogin(){
 
     FB.getLoginStatus(function(response) {
 
-        console.log('statusChangeCallback');
+        //console.log('statusChangeCallback');
 
         if (response.status === 'connected') {
 
-            console.log("connected status...");
+            //console.log("connected status...");
 
             result = fbLogout();
 
 
         } else if (response.status === 'not_authorized') {
 
-            console.log('Please log ' + 'into this app.');
+            //console.log('Please log ' + 'into this app.');
             //document.getElementById('status').innerHTML = 'Please log ' + 'into this app.';
 
         } else {
 
-            console.log('Please log ' + 'into Facebook.');
+            //console.log('Please log ' + 'into Facebook.');
 
             //document.getElementById('status').innerHTML = 'Please log ' + 'into Facebook.';
         }

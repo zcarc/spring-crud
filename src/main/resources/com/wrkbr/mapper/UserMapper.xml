@@ -11,6 +11,7 @@
         <id property="userid" column="userid" />
         <result property="userpw" column="userpw" />
         <result property="username" column="username" />
+        <result property="usernickname" column="usernickname" />
         <result property="userGender" column="userGender" />
         <result property="userPhone" column="userPhone" />
         <result property="userEmail" column="userEmail" />
@@ -29,7 +30,7 @@
 
     <select id="read" resultMap="userMap">
         <![CDATA[
-          select user.userid, userpw, username, userRegDate, userUpdateDate, enabled, auth.auth
+          select user.userid, userpw, username, usernickname, userRegDate, userUpdateDate, enabled, auth.auth
           from user_table user
           left join user_table_auth auth
           on user.userid = auth.userid
@@ -38,9 +39,32 @@
 
     </select>
 
+    <select id="readProfile" resultType="com.wrkbr.domain.ProfileVO">
+        <![CDATA[
+          select user.userid, platform.kakao_id, platform.facebook_id, platform.google_id
+          from user_table user
+          left join user_table_platform platform
+          on user.userid = platform.userid
+          where user.userid = #{userid};
+        ]]>
+
+    </select>
+
+    <select id="readNickname" resultType="String">
+        select usernickname from user_table where userId = #{userId}
+    </select>
+
+    <select id="readId" resultType="String">
+        select userid from user_table where userId = #{userid}
+    </select>
+
+    <select id="readEmail" resultType="String">
+        select useremail from user_table where useremail = #{useremail}
+    </select>
+
     <insert id="insert" >
-      insert into user_table(userid, userpw, username, userGender, userPhone, userEmail, userEmailHash, userEmailChecked)
-      values(#{userid}, #{userpw}, #{username}, #{userGender}, #{userPhone}, #{userEmail}, #{userEmailHash}, #{userEmailChecked})
+      insert into user_table(userid, userpw, username, usernickname, userGender, userPhone, userEmail, userEmailHash, userEmailChecked)
+      values(#{userid}, #{userpw}, #{username}, #{userid}, #{userGender}, #{userPhone}, #{userEmail}, #{userEmailHash}, #{userEmailChecked})
     </insert>
 
     <insert id="insertAuth">
@@ -50,7 +74,7 @@
 
 
     <insert id="insertPlatformUser">
-        insert into user_table(userid, userpw) values(#{id}, #{pw})
+        insert into user_table(userid, userpw, usernickname) values(#{id}, #{pw}, #{id})
     </insert>
 
     <insert id="insertPlatformAuth">
@@ -82,6 +106,26 @@
 
     </select>
 
+    <update id="updateUser">
+
+        update user_table set usernickname = #{usernickname}
+
+        <choose>
+
+            <when test="userpw == '' || userpw == null">
+                where userid = #{userid}
+            </when>
+
+            <when test="userpw != '' || userpw != null">
+                , userpw = #{userpw} where userid = #{userid}
+            </when>
+
+        </choose>
+    </update>
+
+    <update id="updatePW">
+        update user_table set userpw = #{userpw} where useremail = #{useremail}
+    </update>
 
 
 </mapper>

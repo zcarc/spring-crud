@@ -10,7 +10,7 @@ function init() {
     console.log("google init...");
 
     gapi.load('auth2', function() { // ready
-        console.log("google auth2...");
+        //console.log("google auth2...");
 
         // return: gapi.auth2.GoogleAuth
         window.gauth = gapi.auth2.init({
@@ -20,11 +20,11 @@ function init() {
 
         // GoogleAuth.then(onInit, onError)
         gauth.then(function(){
-            console.log("GoogleAuth success.");
-            console.log("GoogleAuth.isSignedIn.get(): " + gauth.isSignedIn.get());
+            //console.log("GoogleAuth success.");
+            //console.log("GoogleAuth.isSignedIn.get(): " + gauth.isSignedIn.get());
 
         }, function(){
-            console.log("GoogleAuth fail.");
+            //console.log("GoogleAuth fail.");
 
         }); // then()
 
@@ -44,14 +44,14 @@ function checkLoginStatus(){
 
     // 로그인 상태 확인
     if(gauth.isSignedIn.get()){
-        console.log("You have been logged in.");
+        //console.log("You have been logged in.");
 
         if(confirm("현재 로그인 상태입니다. 로그아웃 하시겠습니까?")){
             signOut();
         }
 
     } else {
-        console.log("You have been logged out.");
+        //console.log("You have been logged out.");
         signIn();
     }
 
@@ -61,7 +61,7 @@ function signIn() {
 
     gauth.signIn().then(function(){
 
-        console.log("gauth.signIn().then()");
+        //console.log("gauth.signIn().then()");
 
         var googleUser = gauth.currentUser.get();
         var profile = googleUser.getBasicProfile();
@@ -85,9 +85,6 @@ function transferProfile(profile){
         }),
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
-        beforeSend: function(xhr){
-            xhr.setRequestHeader(getCsrf().csrfHeaderName, getCsrf().csrfToken);
-        },
         success: function(result){
             //alert("google ajax result: " + JSON.stringify(result));
 
@@ -114,7 +111,7 @@ function signOut() {
 
     gauth.signOut().then(function(){
 
-        console.log("gauth.signOut().then()");
+        //console.log("gauth.signOut().then()");
         location.reload(true);
     });
 

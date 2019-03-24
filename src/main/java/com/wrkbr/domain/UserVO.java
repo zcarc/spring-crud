@@ -24,6 +24,8 @@ public class UserVO {
     @Pattern(regexp="[가-힣]{2,10}", message="이름을 확인하세요.")
     private String username;
 
+    private String usernickname;
+
     @Column
     @NotNull(message="성별을 선택하세요.")
     private String userGender;
@@ -44,13 +46,13 @@ public class UserVO {
 
     private List<UserAuthVO> authList;
 
-
     @Override
     public String toString() {
         return "UserVO{" +
                 "userid='" + userid + '\'' +
                 ", userpw='" + userpw + '\'' +
                 ", username='" + username + '\'' +
+                ", usernickname='" + usernickname + '\'' +
                 ", userGender='" + userGender + '\'' +
                 ", userPhone='" + userPhone + '\'' +
                 ", userEmail='" + userEmail + '\'' +
@@ -85,6 +87,14 @@ public class UserVO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUsernickname() {
+        return usernickname;
+    }
+
+    public void setUsernickname(String usernickname) {
+        this.usernickname = usernickname;
     }
 
     public String getUserGender() {

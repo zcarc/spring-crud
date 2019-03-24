@@ -1,6 +1,7 @@
 package com.wrkbr.mapper;
 
 import com.wrkbr.domain.PlatformVO;
+import com.wrkbr.domain.ProfileVO;
 import com.wrkbr.domain.UserAuthVO;
 import com.wrkbr.domain.UserVO;
 import org.apache.ibatis.annotations.Param;
@@ -19,4 +20,17 @@ public interface UserMapper {
     public void insertPlatformTable(PlatformVO platformVO);
 
     public String selectPrefix(PlatformVO platformVO);
+
+    public ProfileVO readProfile(String userId);
+    public String readNickname(String userId);
+    public String readId(String userid);
+    public String readEmail(String readEmail);
+
+    public void updateUser(UserVO userVO);
+    public void updatePW(@Param("userpw") String userpw, @Param("useremail") String useremail);
+
+
+
+
+
 }

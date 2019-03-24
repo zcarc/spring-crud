@@ -1,6 +1,7 @@
 package com.wrkbr.controller;
 
 import com.wrkbr.domain.PlatformVO;
+import com.wrkbr.email.GenerateChar;
 import com.wrkbr.mapper.UserMapper;
 import com.wrkbr.service.UserService;
 import lombok.Setter;
@@ -15,6 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
@@ -38,7 +43,7 @@ public class CommonController {
     }
 
     @GetMapping("/customLogin")
-    public String customLogin(String logout, String error, Model model, String platformId) {
+    public String customLogin(String logout, String error, Model model, String platformId, Principal principal, HttpServletResponse response) {
         log.info("customLogin...");
         log.info("logout: " + logout);
         log.info("error: " + error);
@@ -53,6 +58,24 @@ public class CommonController {
         if (platformId != null) {
             model.addAttribute("platformId", platformId);
         }
+
+        if(principal != null){
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("text/html; charset=utf-8");
+
+            try (PrintWriter writer = response.getWriter()) {
+
+                writer.println("<script>");
+                writer.println("alert('현재 로그인 상태입니다.');");
+                writer.println("location = '/board/list';");
+                writer.println("</script>");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
         return "login/customLogin";
     }
 
@@ -76,6 +99,8 @@ public class CommonController {
     @ResponseBody
     public ResponseEntity<Map<String, String>> getPlatformInfo(@RequestBody Map<Object, String> userInfo) {
 
+        GenerateChar generateChar = new GenerateChar();
+
         log.info("getPlatformInfo...");
         log.info("userInfo: " + userInfo);
 
@@ -85,29 +110,27 @@ public class CommonController {
         PlatformVO platformVO = new PlatformVO();
 
 
+        // 카카오
         if (userInfo.get("platform").equals("kakao")) {
 
             platformVO.setKakao_id(userInfo.get("id"));
-            platformVO.setKa_generate(generateChar());
+            platformVO.setKa_generate(generateChar.generateChar());
 
-            prefix = insertPlatformUser(platformVO);
-
-
-          // 페이스북 로그인
+        // 페이스북
         } else if (userInfo.get("platform").equals("facebook")) {
 
             platformVO.setFacebook_id(userInfo.get("id"));
-            platformVO.setFb_generate(generateChar());
+            platformVO.setFb_generate(generateChar.generateChar());
 
-            prefix = insertPlatformUser(platformVO);
-
+        // 구글
         } else if (userInfo.get("platform").equals("google")) {
 
             platformVO.setGoogle_id(userInfo.get("id"));
-            platformVO.setGg_generate(generateChar());
-
-            prefix = insertPlatformUser(platformVO);
+            platformVO.setGg_generate(generateChar.generateChar());
         }
+
+        platformVO.setUserid(userInfo.get("id"));
+        prefix = insertPlatformUser(platformVO);
 
         result.put("prefix", prefix);
 
@@ -132,35 +155,6 @@ public class CommonController {
         return prefix;
     }
 
-
-    private String generateChar() {
-
-        StringBuffer buffer = new StringBuffer();
-
-        IntStream.rangeClosed(1, 10).forEach(i -> {
-
-            double d = Math.random();
-
-            if (i % 2 == 1) {
-
-                char c = (char) ((int) (d * 26 + 97));
-                //log.info("i: " + i + ", 홀수: " + c);
-                buffer.append(c);
-
-            } else if (i % 2 == 0) {
-
-                char c = (char) ((int) (d * 26) + 65);
-                //log.info("i: " + i + ", 짝수: " + c);
-                buffer.append(c);
-            }
-
-        });
-
-        String result = buffer.toString();
-        log.info("Generated result: " + result);
-
-        return result;
-    }
 
 }
 

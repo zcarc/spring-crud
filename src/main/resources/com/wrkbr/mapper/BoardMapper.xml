@@ -63,7 +63,7 @@
             where table_schema = "wrkdb" AND table_name = "board";
         </selectKey>
 
-        insert into board(bno, title, content, writer) values(#{bno}, #{title}, #{content}, #{writer})
+        insert into board(bno, title, content, writer, writerId) values(#{bno}, #{title}, #{content}, #{writer}, #{writerId})
 
     </insert>
 

@@ -164,6 +164,8 @@
 
     $(document).ready(function(){
 
+        // 업로드 이미지 영역 시작
+
         // read.jsp로 이동 시, 즉시 실행 함수로 타입에 맞는 이미지 출력
         (function(){
 
@@ -264,11 +266,13 @@
 
         });
 
+        // 업로드 이미지 영역 끝
+
 
         // ajax 공통으로 호출
-        $(document).ajaxSend(function(e,xhr,options) {
-            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-        });
+        <%--$(document).ajaxSend(function(e,xhr,options) {--%>
+            <%--xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");--%>
+        <%--});--%>
 
         var bno = "${boardVO.bno}";
         var replyUL = $(".chat");

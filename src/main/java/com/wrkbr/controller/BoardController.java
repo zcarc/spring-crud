@@ -4,6 +4,7 @@ import com.wrkbr.domain.BoardAttachVO;
 import com.wrkbr.domain.BoardVO;
 import com.wrkbr.domain.Criteria;
 import com.wrkbr.domain.PageDTO;
+import com.wrkbr.mapper.UserMapper;
 import com.wrkbr.service.BoardService;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -12,21 +13,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.UUID;
 
 
 @Controller
 @RequestMapping("/board/*")
 @Log4j
 public class BoardController {
+
+    @Setter(onMethod_ = @Autowired)
+    private UserMapper userMapper;
 
     @Setter(onMethod_ = @Autowired)
     private BoardService boardService;
@@ -38,19 +52,60 @@ public class BoardController {
 //    }
 
     @GetMapping("/list")
-    public void list(Criteria criteria, Model model){
+    public void list(Criteria criteria, Model model, String setEditor, Principal principal){
         log.info("list()...");
-
         log.info("criteria: " + criteria);
+        log.info("setEditor: " + setEditor);
+        log.info("principal: " + principal);
+
+
+        String username = null;
+        String usernickname = null;
+
+        if(principal != null){
+            username = principal.getName();
+            log.info("principal.getName(): " + username);
+
+            usernickname = userMapper.readNickname(username);
+            log.info("usernickname: " + usernickname);
+
+            model.addAttribute("usernickname", usernickname);
+
+        } else {
+            model.addAttribute("usernickname", null);
+        }
+
 
         model.addAttribute("list", boardService.getListWithPagination(criteria));
         model.addAttribute("pageDTO", new PageDTO(criteria, boardService.boardCount(criteria)));
+
+        if(setEditor != null){
+            model.addAttribute("setEditor", "default");
+        }
     }
 
     @GetMapping("/insert")
     @PreAuthorize("isAuthenticated()")
     public void insert(){
         log.info("Get insert()...");
+    }
+
+
+    @GetMapping("/insertEditor")
+    @PreAuthorize("isAuthenticated()")
+    public String insertEditor(Principal principal, Model model){
+        log.info("Get insertEditor()...");
+
+
+        if(principal != null) {
+            String usernickname = userMapper.readNickname(principal.getName());
+            model.addAttribute("usernickname", usernickname);
+            log.info("usernickname: " + usernickname);
+        } else {
+            model.addAttribute("usernickname", null);
+        }
+
+        return "/board/insertEditor";
     }
 
 
@@ -78,9 +133,25 @@ public class BoardController {
         model.addAttribute("boardVO", boardService.read(bno));
     }
 
+    @GetMapping({"/readEditor", "/updateEditor"})
+    public void readEditor(@RequestParam("bno") Long bno, @ModelAttribute("criteria") Criteria criteria, Model model, Principal principal){
+        log.info("readEditor() or updateEditor()...");
+
+        if(principal != null) {
+            String usernickname = userMapper.readNickname(principal.getName());
+            model.addAttribute("usernickname", usernickname);
+            log.info("usernickname: " + usernickname);
+
+        } else {
+            model.addAttribute("usernickname", null);
+        }
+
+        model.addAttribute("boardVO", boardService.read(bno));
+    }
+
 
     @PostMapping("/update")
-    @PreAuthorize("principal.username == #boardVO.writer")
+    @PreAuthorize("principal.username == #boardVO.writerId")
     public String update(BoardVO boardVO, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes redirectAttributes){
         log.info("Post update()...");
 
@@ -91,8 +162,8 @@ public class BoardController {
     }
 
     @PostMapping("/delete")
-    @PreAuthorize("principal.username == #writer")
-    public String delete(Long bno, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes redirectAttributes, String writer){
+    @PreAuthorize("principal.username == #writerId")
+    public String delete(Long bno, @ModelAttribute("criteria") Criteria criteria, RedirectAttributes redirectAttributes, String writerId){
         log.info("delete()...");
         log.info("bno: " + bno);
 
@@ -121,7 +192,7 @@ public class BoardController {
     }
 
 
-    // Called this method when called delete mapping.
+    // Called "this method" when "delete method" called
     // Physical deletion.
     private void deleteFiles(List<BoardAttachVO> attachList) {
         log.info("deleteFiles...");
@@ -160,6 +231,9 @@ public class BoardController {
 
         });
     }
+
+
+
 
 
 

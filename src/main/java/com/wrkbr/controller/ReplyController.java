@@ -53,7 +53,7 @@ public class ReplyController {
 
     // 댓글 삭제
     @DeleteMapping(value = "/{rno}", produces = {MediaType.TEXT_PLAIN_VALUE})
-    @PreAuthorize("principal.username == #replyVO.replyer")
+    @PreAuthorize("principal.username == #replyVO.replyerId")
     public ResponseEntity<String> delete(@PathVariable("rno") Long rno, @RequestBody ReplyVO replyVO) {
         log.info("delete()..." + " rno: " + rno + " replyVO.replyer: " + replyVO.getReplyer());
 
@@ -66,11 +66,14 @@ public class ReplyController {
     // 댓글 수정
     @RequestMapping(value = "/{rno}", method = {RequestMethod.PUT, RequestMethod.PATCH},
                     consumes = "application/json", produces = {MediaType.TEXT_PLAIN_VALUE})
-    @PreAuthorize("principal.username == #replyVO.replyer")
+    @PreAuthorize("principal.username == #replyVO.replyerId")
     public ResponseEntity<String> update (@RequestBody ReplyVO replyVO, @PathVariable("rno") Long rno){
-        log.info("update()..." + " replyVO: " + replyVO + " rno: " + rno);
+        log.info("update()..." + " replyVO: " + replyVO );
+        log.info("rno: " + rno);
 
         replyVO.setRno(rno);
+        log.info("after setRno replyVO: " + replyVO);
+
         int result = replyService.update(replyVO);
         return result == 1
                 ? new ResponseEntity<>("Successfully modified.", HttpStatus.OK)

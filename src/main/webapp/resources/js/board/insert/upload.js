@@ -87,9 +87,9 @@ $("input[type='file']").change(function(e){
         contentType: false,
         data: formData,
         dataType: 'json',
-        beforeSend: function(xhr){
-            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-        },
+        // beforeSend: function(xhr){
+        //     xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        // },
         success : function(result){
             //console.log(result);
             showUploadedResult(result);
@@ -172,9 +172,9 @@ $(".uploadedResult").on("click", "button", function(e){
         type: 'post',
         data: {fileName:deleteFile, type:type},
         dataType: 'text',
-        beforeSend: function(xhr){
-            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-        },
+        // beforeSend: function(xhr){
+        //     xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        // },
         success: function(result) {
             //console.log("deleteFile result: " + result);
             currentFileLi.remove();

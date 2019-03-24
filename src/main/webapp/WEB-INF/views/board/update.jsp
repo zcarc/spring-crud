@@ -22,7 +22,7 @@
 
         <form action="/board/update" method="post">
 
-            <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
+            <%--<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">--%>
 
             <input type="hidden" name="currentPage" value="${criteria.currentPage}">
             <input type="hidden" name="displayRecords" value="${criteria.displayRecords}">
@@ -228,9 +228,9 @@
             contentType: false,
             data: formData,
             dataType: 'json',
-            beforeSend: function(xhr){
-                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-            },
+            <%--beforeSend: function(xhr){--%>
+                <%--xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");--%>
+            <%--},--%>
             success : function(result){
                 showUploadedResult(result);
             }

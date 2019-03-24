@@ -26,6 +26,8 @@
             height:18px;
             margin-right:3px;
         }
+
+
     </style>
 
     <meta charset="utf-8">
@@ -48,7 +50,9 @@
 
 <body class="bg-gradient-primary">
 
+
 <div class="container">
+
 
     <!-- Outer Row -->
     <div class="row justify-content-center">
@@ -59,7 +63,8 @@
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image">
+                        </div>
                         <div class="col-lg-6">
                             <div class="p-5">
                                 <div class="text-center">
@@ -73,16 +78,16 @@
 
                                 <form role="form" method="post" action="/login" class="user">
 
-                                    <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
+                                    <%--<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">--%>
 
                                     <div class="form-group">
                                         <input type="text" class="form-control form-control-user" id="uid" name="username"
-                                               placeholder="user ID" autofocus>
+                                               placeholder="아이디" autofocus>
                                     </div>
 
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-user" id="upw" name="password"
-                                               placeholder="Password" value="">
+                                               placeholder="패스워드" value="">
                                     </div>
 
                                     <div class="form-group">
@@ -115,8 +120,17 @@
                                 <hr>
 
                                 <div class="text-center">
+                                    <a class="small" href="/board/list">홈으로</a>
+                                </div>
+
+                                <div class="text-center">
+                                    <a class="small" href="/findPW">비밀번호 찾기</a>
+                                </div>
+
+                                <div class="text-center">
                                     <a class="small" href="/register">회원가입</a>
                                 </div>
+
 
                                 <%--<div>--%>
                                     <%--<button id="status">Kakao login status check</button>--%>
@@ -152,15 +166,15 @@
 
 <script type="text/javascript">
 
-    function getCsrf(){
-        var csrfHeaderName = "${_csrf.headerName}";
-        var csrfToken = "${_csrf.token}";
+    <%--function getCsrf(){--%>
+        <%--var csrfHeaderName = "${_csrf.headerName}";--%>
+        <%--var csrfToken = "${_csrf.token}";--%>
 
-        return {
-            csrfHeaderName: csrfHeaderName,
-            csrfToken: csrfToken
-        }
-    }
+        <%--return {--%>
+            <%--csrfHeaderName: csrfHeaderName,--%>
+            <%--csrfToken: csrfToken--%>
+        <%--}--%>
+    <%--}--%>
 
     function getParamLogout() {
 

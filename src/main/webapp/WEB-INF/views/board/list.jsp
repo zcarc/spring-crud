@@ -98,6 +98,7 @@
                 <input type="hidden" name="currentPage" value="${pageDTO.criteria.currentPage}">
                 <input type="hidden" name="displayRecords" value="${pageDTO.criteria.displayRecords}">
             </form>
+            <input type="hidden" id="setEditor" value="${setEditor}">
 
 
 
@@ -159,23 +160,35 @@
 
 
         $("#regBtn").click(function(){
-            location = "/board/insert";
+
+            if($("#setEditor").val()){
+                location = "/board/insert";
+                return;
+            }
+
+            location = "/board/insertEditor";
         });
 
-        // pagination
+        // 페이지 버튼 클릭 시
         $(".paginate_button a").click(function(e){
             e.preventDefault();
             $("#actionForm").find("input[name='currentPage']").val($(this).attr("href"));
             $("#actionForm").submit();
         });
 
-        // read
+        // 게시글 제목 클릭 시
         $(".move").click(function(e){
            e.preventDefault();
             $("#actionForm").append("<input type='hidden' name='bno' value='"+$(this).attr('href')+"'>");
             $("#actionForm").append($("#searchForm").find("select[name='type']"));
             $("#actionForm").append($("#searchForm").find("input[name='keyword']"));
-            $("#actionForm").attr("action", "/board/read");
+
+            $("#actionForm").attr("action", "/board/readEditor");
+
+            if($("#setEditor").val()){
+                console.log("$(\"#setEditor\").val(): " + $("#setEditor").val());
+                $("#actionForm").attr("action", "/board/read");
+            }
 
             $("#actionForm").submit();
         });

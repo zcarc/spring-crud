@@ -7,7 +7,7 @@
 <mapper namespace="com.wrkbr.mapper.ReplyMapper">
 
     <insert id="insert">
-        insert into reply(bno, reply, replyer) values(#{bno}, #{reply}, #{replyer})
+        insert into reply(bno, reply, replyer, replyerId) values(#{bno}, #{reply}, #{replyer}, #{replyerId})
     </insert>
 
     <select id="read" resultType="com.wrkbr.domain.ReplyVO">
@@ -19,7 +19,7 @@
     </delete>
 
     <update id="update">
-        update reply set reply = #{reply}, updateDate = now() where rno = #{rno}
+        update reply set reply = #{reply} , replyer = #{replyer}, updateDate = now() where rno = #{rno}
     </update>
 
     <select id="getListWithPagination" resultType="com.wrkbr.domain.ReplyVO">

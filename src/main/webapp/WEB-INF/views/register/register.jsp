@@ -49,7 +49,7 @@
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6 d-none d-lg-block bg-register-image"></div>
                         <div class="col-lg-6">
                             <div class="p-5">
                                 <div class="text-center">
@@ -69,9 +69,16 @@
 
 
                                     <div class="form-group row">
-                                        <form:input path="userid" id="userid" class="form-control" placeholder="아이디" />
+                                        <div class="input-group">
+                                            <form:input path="userid" id="userid" class="form-control" placeholder="아이디" />
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary btn-sm" id="checkid" type="button">중복확인</button>
+                                            </div>
+                                        </div>
+
                                         <form:errors path="userid" class="danger"/>
                                     </div>
+
 
 
                                     <div class="form-group row">
@@ -82,11 +89,11 @@
 
                                     <div class="form-group row">
                                         <div class="input-group">
-                                            <form:input path="userEmail" id="userEmail" class="form-control" autocomplete="true" placeholder="이메일"/>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-primary btn-sm" id="verityBtn" type="button">이메일 인증</button>
-                                            </div>
+                                        <form:input path="userEmail" id="userEmail" class="form-control" autocomplete="true" placeholder="이메일"/>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary btn-sm" id="verityBtn" type="button">이메일 인증</button>
                                         </div>
+                                    </div>
 
                                         <form:errors path="userEmail" class="danger"/>
                                     </div>
@@ -168,18 +175,16 @@
 </body>
 
 <script type="text/javascript">
+
+
     //DOM 로드 후 자동 실행
-    if($("#userpw").val()){
-        $("#userpw").attr('type', 'password').val('');
-    }
-
-
+    // if($("#userpw").val()){
+    //     $("#userpw").attr('type', 'password').val('');
+    // }
 
     $("input[id^='u']").each(function(e,i){
 
         $(this).attr("maxlength", "30");
-
-
     });
 
 
@@ -187,15 +192,15 @@
     //이메일 인증 버튼
     $("#verityBtn").click(function(){
 
-        var csrfHeaderName = "${_csrf.headerName}"; // X-CSRF-TOKEN
-        var csrfTokenValue = "${_csrf.token}";
+        <%--var csrfHeaderName = "${_csrf.headerName}"; // X-CSRF-TOKEN--%>
+        <%--var csrfTokenValue = "${_csrf.token}";--%>
 
-        console.log("csrfHeaderName: " + csrfHeaderName);
-        console.log("csrfTokenValue: " + csrfTokenValue);
+        <%--console.log("csrfHeaderName: " + csrfHeaderName);--%>
+        <%--console.log("csrfTokenValue: " + csrfTokenValue);--%>
 
         var regex = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
 
-        console.log(regex.test($("#userEmail").val()));
+        //console.log(regex.test($("#userEmail").val()));
 
         if (regex.test($("#userEmail").val()) == false) {
 
@@ -207,16 +212,16 @@
                 $.ajax({
                     url : "/requestEmailAuth",
                     type :"post",
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
-                    },
+                    // beforeSend: function(xhr) {
+                    //     xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+                    // },
                     contentType : "application/json; charset=utf-8",
                     data :  JSON.stringify({
                         userEmail : $("#userEmail").val()
                     }),
                     dataType : "text",
                     success : function(result){
-                        console.log("result: " + result);
+                        //console.log("result: " + result);
                         if(result == "success") {
                             //alert("인증 메일을 발송하였습니다.");
                         } else {
@@ -270,10 +275,50 @@
 
         }//if
 
+        if(idVerify === false){
+            alert("아이디 중복 확인이 필요합니다.");
+            return false;
+        }
+
 
 
     }//checkSpaces
     /********************************************************************************************************/
+
+    $("#checkid").click(function(){
+
+        var userid = $("#userid").val();
+
+
+        if( userid.length < 6 ) {
+            alert("아이디는 6자 이상입니다.");
+            return;
+        }
+
+        $.ajax({
+            url: "/checkId",
+            type: "post",
+            data: userid,
+            dataType: 'text',
+            contentType: 'text/html; charset=utf-8',
+            success: function(result){
+                window.idVerify = false;
+
+                if(result === 'O'){
+                    alert("이미 존재하는 아이디입니다.");
+
+                } else {
+                    alert("사용할 수 있는 아이디입니다.");
+                    idVerify = true;
+                }
+            }
+
+        });
+
+
+    });
+
+
 </script>
 
 </html>

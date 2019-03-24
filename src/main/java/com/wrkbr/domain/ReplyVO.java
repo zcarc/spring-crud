@@ -13,6 +13,7 @@ public class ReplyVO {
 
     private String reply;
     private String replyer;
+    private String replyerId;
     private Date regDate;
     private Date updateDate;
 }

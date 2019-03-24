@@ -1,6 +1,7 @@
 package com.wrkbr.service;
 
 import com.wrkbr.domain.PlatformVO;
+import com.wrkbr.domain.ProfileVO;
 import com.wrkbr.domain.UserAuthVO;
 import com.wrkbr.domain.UserVO;
 import com.wrkbr.mapper.UserMapper;

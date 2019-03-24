@@ -20,7 +20,7 @@
 
         <form role="form" action="/board/insert" method="post">
 
-            <input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
+            <%--<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">--%>
 
             <div class="form-group">
                 <label>Title</label>

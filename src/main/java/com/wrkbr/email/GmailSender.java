@@ -17,14 +17,16 @@ public class GmailSender {
     private static String id = "id";
     private static String pw = "pw";
 
-    private static JavaMailSenderImpl javaMailSenderImpl = new JavaMailSenderImpl();
+    public static JavaMailSenderImpl javaMailSenderImpl = new JavaMailSenderImpl();
 
 
     public static String tryMail(String userEmail, String protocol, String host, HttpServletRequest request) throws MessagingException, NoSuchAlgorithmException, UnsupportedEncodingException {
         log.info("tryMail()...");
 
+
         log.info("protocol + host + request.getContextPath(): " + protocol + "+" + host + "+" + request.getContextPath());
         log.info("tryMail - userEmail: " + userEmail);
+
 
         String key = new SHA256().getSHA256(userEmail);
         log.info("tryMail - String key = new SHA256().getSHA256(userEmail): " + key);
@@ -79,6 +81,18 @@ public class GmailSender {
         return prop;
 
     }
+
+
+
+    public static String getId() {
+        return id;
+    }
+
+    public static String getPw() {
+        return pw;
+    }
+
+
 
 
 }

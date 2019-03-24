@@ -33,6 +33,7 @@
 
 <body id="page-top">
 
+
 <!-- Page Wrapper -->
 <div id="wrapper">
 
@@ -52,9 +53,9 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/board/list">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
-                <span>Dashboard</span></a>
+                <span>홈으로</span></a>
         </li>
 
         <!-- Divider -->
@@ -89,10 +90,10 @@
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Custom Utilities:</h6>
-                    <a class="collapse-item" href="utilities-color.html">Colors</a>
-                    <a class="collapse-item" href="utilities-border.html">Borders</a>
-                    <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                    <a class="collapse-item" href="utilities-other.html">Other</a>
+                    <a class="collapse-item" href="#">Colors</a>
+                    <a class="collapse-item" href="#">Borders</a>
+                    <a class="collapse-item" href="#">Animations</a>
+                    <a class="collapse-item" href="#">Other</a>
                 </div>
             </div>
         </li>
@@ -114,27 +115,27 @@
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Login Screens:</h6>
-                    <a class="collapse-item" href="login.html">Login</a>
-                    <a class="collapse-item" href="register.html">Register</a>
-                    <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                    <a class="collapse-item" href="#">Login</a>
+                    <a class="collapse-item" href="#">Register</a>
+                    <a class="collapse-item" href="#">Forgot Password</a>
                     <div class="collapse-divider"></div>
                     <h6 class="collapse-header">Other Pages:</h6>
-                    <a class="collapse-item" href="404.html">404 Page</a>
-                    <a class="collapse-item" href="blank.html">Blank Page</a>
+                    <a class="collapse-item" href="#">404 Page</a>
+                    <a class="collapse-item" href="#">Blank Page</a>
                 </div>
             </div>
         </li>
 
         <!-- Nav Item - Charts -->
         <li class="nav-item">
-            <a class="nav-link" href="charts.html">
+            <a class="nav-link" href="#">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>Charts</span></a>
         </li>
 
         <!-- Nav Item - Tables -->
         <li class="nav-item active">
-            <a class="nav-link" href="tables.html">
+            <a class="nav-link" href="#">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Tables</span></a>
         </li>
@@ -310,24 +311,38 @@
 
                     <!-- Nav Item - User Information -->
                     <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                            <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="<c:out value="${!empty usernickname ? 'dropdown' : ''}" />" aria-haspopup="true" aria-expanded="false">
+
+                            <c:if test="${!empty usernickname}">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><span class="text-primary">${usernickname}</span></span>
+                            </c:if>
+
+                            <c:if test="${empty usernickname}">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="anoLogin">로그인</span>
+                            </c:if>
+
+
+                            <img class="img-profile rounded-circle" src="/resources/img/Valerie_Luna.jpg" style="margin-left: 6px;">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profile
-                            </a>
+
+                            <sec:authorize access="isAuthenticated()">
+                                <a class="dropdown-item" href="#" id="toProfile">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    회원정보 수정
+                                </a>
+                            </sec:authorize>
+
+
                             <a class="dropdown-item" href="#">
                                 <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Settings
+                                설정
                             </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
-                            </a>
+                            <%--<a class="dropdown-item" href="#">--%>
+                                <%--<i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>--%>
+                                <%--Activity Log--%>
+                            <%--</a>--%>
 
 
                             <!-- 로그인 상태에 따른 로그인, 로그아웃 디스플레이 -->
@@ -335,14 +350,14 @@
                             <sec:authorize access="isAuthenticated()">
                                 <a class="dropdown-item" href="/customLogout">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    로그아웃
                                 </a>
                             </sec:authorize>
 
                             <sec:authorize access="isAnonymous()">
                                 <a class="dropdown-item" href="/customLogin">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Login
+                                    로그인
                                 </a>
                             </sec:authorize>
 
@@ -359,5 +374,27 @@
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
+
+
+
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+                <script>
+                    $("#toProfile").click(function(e){
+
+                        e.preventDefault();
+
+                        location = "/profile";
+                    });
+
+
+                    $("#anoLogin").click(function(e){
+
+                        e.preventDefault();
+
+                        location = "/customLogin";
+                    });
+
+                </script>
 

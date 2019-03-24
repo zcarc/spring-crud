@@ -1,6 +1,7 @@
 package com.wrkbr.service;
 
 import com.wrkbr.domain.PlatformVO;
+import com.wrkbr.domain.ProfileVO;
 import com.wrkbr.domain.UserAuthVO;
 import com.wrkbr.domain.UserVO;
 
@@ -11,4 +12,5 @@ public interface UserService {
     public void insert(UserVO vo, String auth);
 
     public void insertAllInfoPlatformUser(PlatformVO platformVO);
+
 }
