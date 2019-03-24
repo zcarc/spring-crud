@@ -9,7 +9,7 @@
 
     showList(1);
 
-    // read.jsp 댓글 페이징 즉시 실행
+    // read 댓글 페이징 즉시 실행
     function showList(currentPage) {
 
         replyService.getListWithPagination({

@@ -291,6 +291,10 @@ public class UploadController {
 
             String uploadPath = "C:\\BoardApp\\src\\main\\webapp\\resources";
 
+            File createFolder = new File(uploadPath + "ckUpload");
+            if(!createFolder.exists())
+                createFolder.mkdir();
+
             // 업로드 경로
             String ckUploadPath = uploadPath + File.separator + "ckUpload" + File.separator + uuid + "_" + fileName;
             System.out.println("ckUploadPath: " + ckUploadPath);
