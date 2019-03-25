@@ -132,13 +132,9 @@ public class UserController {
         log.info("reuqestHost: " + reuqestHost);
         log.info("requestProtocol: " + requestProtocol);
 
-        // Get a host name
-         if( reuqestHost.contains("localhost")) {
-            host = reuqestHost;
 
-        } else if ( reuqestHost.contains("boardAPI") ) {
-            host = reuqestHost;
-        }
+        host = reuqestHost;
+        log.info("host = requestHost: " + host);
 //        if( reuqestHost.indexOf("localhost") > -1) {
 //            host = reuqestHost;
 //
