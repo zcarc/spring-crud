@@ -10,7 +10,8 @@ var ckeditor_config = {
     resize_enabled : false,
     extraAllowedContent : 'iframe[*]',
     width: "100%",
-    height: "585px"
+    height: "600px",
+    image_previewText: ' '
 };
 
 CKEDITOR.replace("ckeditor", ckeditor_config);
