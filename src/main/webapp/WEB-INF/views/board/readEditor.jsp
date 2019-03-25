@@ -39,9 +39,14 @@
 
 
         <div class="form-group">
-            <textarea class="form-control" rows="3" name="content" id="ckeditor" readonly><c:out value="${boardVO.content }" /></textarea>
+            <%--<textarea class="form-control" rows="3" name="content" id="ckeditor" readonly><c:out value="${boardVO.content }" /></textarea>--%>
+            <div id="temp"></div>
+            <input type="hidden" name="content" id="content001" value='<c:out value="${boardVO.content }" />'>
             <hr>
         </div>
+
+
+
 
         <div class="form-group">
             <small class="font-weight-bold text-danger">Writer</small>
@@ -157,8 +162,8 @@
 </div>
 
 <%-- CK Editor --%>
-<script src="/resources/ckeditor/ckeditor.js" type="text/javascript"></script>
-<script src="/resources/js/board/common/ck-editor.js" type="text/javascript"></script>
+<%--<script src="/resources/ckeditor/ckeditor.js" type="text/javascript"></script>--%>
+<%--<script src="/resources/js/board/common/ck-editor.js" type="text/javascript"></script>--%>
 
 <%-- 댓글 CURD --%>
 <script src="/resources/js/reply.js" type="text/javascript"></script>
@@ -172,7 +177,7 @@
     window.replyerId = null;
 
     <sec:authorize access="isAuthenticated()">
-        replyerId = "<sec:authentication property="principal.username" />";
+    replyerId = "<sec:authentication property="principal.username" />";
     </sec:authorize>
 
     var modal = $("#myModal");
@@ -184,13 +189,13 @@
         var usernickname = "${usernickname}";
 
         <sec:authorize access="isAnonymous()">
-            if(confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")){
-                location = "/customLogin";
-                return;
+        if(confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")){
+            location = "/customLogin";
+            return;
 
-            } else {
-                return;
-            }
+        } else {
+            return;
+        }
         </sec:authorize>
 
         modal.find("input").val("");
@@ -213,6 +218,12 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
+
+        console.log("$(\"#content001\").val(): "+ $("#content001").val());
+
+        // 기존 이미지 불러와서 div에 저장
+        $("#temp").html($("#content001").val());
+
 
         var operForm = $("#operForm");
         $("button[data-oper='update']").click(function(e){
