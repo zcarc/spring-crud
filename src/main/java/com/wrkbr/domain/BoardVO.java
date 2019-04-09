@@ -13,6 +13,9 @@ public class BoardVO {
     private String content;
     private String writer;
     private String writerId;
+    private Long bgroup;
+    private int bstep;
+    private int bindent;
     private Date regDate;
     private Date updateDate;
 
@@ -59,6 +62,30 @@ public class BoardVO {
 
     public void setWriterId(String writerId) {
         this.writerId = writerId;
+    }
+
+    public Long getBgroup() {
+        return bgroup;
+    }
+
+    public void setBgroup(Long bgroup) {
+        this.bgroup = bgroup;
+    }
+
+    public int getBstep() {
+        return bstep;
+    }
+
+    public void setBstep(int bstep) {
+        this.bstep = bstep;
+    }
+
+    public int getBindent() {
+        return bindent;
+    }
+
+    public void setBindent(int bindent) {
+        this.bindent = bindent;
     }
 
     public Date getRegDate() {

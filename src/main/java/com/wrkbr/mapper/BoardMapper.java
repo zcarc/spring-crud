@@ -19,6 +19,8 @@ public interface BoardMapper {
     public int delete(Long bno);
     public int update(BoardVO boardVO);
     public void updateReplyCount(@Param("bno") Long bno, @Param("amount") int amount);
+    public void replyInsertSelectKey(BoardVO boardVO);
+    public void checkStep(BoardVO boardVO);
 
 
 

@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -145,8 +146,9 @@ public class BoardController {
         } else {
             model.addAttribute("usernickname", null);
         }
-
-        model.addAttribute("boardVO", boardService.read(bno));
+        BoardVO boardVO = boardService.read(bno);
+        log.info("boardVO: " + boardVO);
+        model.addAttribute("boardVO", boardVO);
     }
 
 
@@ -232,6 +234,42 @@ public class BoardController {
         });
     }
 
+
+
+    @GetMapping("/replyEditor")
+    public void replyEditor(BoardVO boardVO, Model model, Criteria criteria, Principal principal){
+
+        log.info("replyEditor GET...");
+        log.info("boardVO: " + boardVO);
+
+        if(principal != null){
+            String usernickname = userMapper.readNickname(principal.getName());
+            model.addAttribute("usernickname", usernickname);
+            log.info("usernickname: " + usernickname);
+
+        } else {
+            model.addAttribute("usernickname", null);
+        }
+
+
+        model.addAttribute("boardVO", boardVO);
+        model.addAttribute("criteria", criteria);
+
+    }
+
+
+    @PostMapping("/replyEditor")
+    public String replyEditorPost(BoardVO boardVO, Model model, Criteria criteria, RedirectAttributes redirectAttributes){
+
+        log.info("replyEditor POST...");
+
+        boardService.replyInsertSelectKey(boardVO);
+        redirectAttributes.addFlashAttribute("result", "successfully insert");
+
+        //model.addAttribute("criteria", criteria);
+        return "redirect:/board/list" + criteria.getListLink();
+
+    }
 
 
 

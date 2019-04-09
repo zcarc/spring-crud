@@ -110,4 +110,16 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardAttachVO> getListAttach(Long bno) {
         return boardAttachMapper.getListAttach(bno);
     }
+
+
+    //답글
+    @Override
+    @Transactional
+    public void replyInsertSelectKey(BoardVO boardVO) {
+
+        boardMapper.checkStep(boardVO);
+        boardMapper.replyInsertSelectKey(boardVO);
+
+
+    }
 }

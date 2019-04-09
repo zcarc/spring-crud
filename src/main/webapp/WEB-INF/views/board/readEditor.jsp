@@ -61,11 +61,12 @@
             <input type="hidden" name="writerId" value="${pinfo}">
             <c:if test="${pinfo.username eq boardVO.writerId}">
                 <button data-oper='update' class='btn btn-primary'>수정</button>
+
             </c:if>
 
         </sec:authorize>
 
-
+        <button data-oper="reply" class="btn btn-primary">답글</button>
         <button data-oper='list' class='btn btn-warning'>목록</button>
 
 
@@ -75,6 +76,7 @@
             <input type="hidden" name="displayRecords" value="${criteria.displayRecords}">
             <input type="hidden" name="type" value="${criteria.type}">
             <input type="hidden" name="keyword" value="${criteria.keyword}">
+
 
         </form>
 
@@ -233,6 +235,26 @@
         $("button[data-oper='list']").click(function(e){
             operForm.find("#bno").remove();
             operForm.attr("action", "/board/list");
+            operForm.submit();
+        });
+
+
+        $("button[data-oper='reply']").click(function(e){
+
+            <sec:authorize access="isAnonymous()">
+                if(confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?")){
+                    location = "/customLogin";
+                    return;
+                } else {
+                    return;
+                }
+            </sec:authorize>
+
+            var str = "<input type=\"hidden\" name=\"bgroup\" value=\"${boardVO.bgroup}\">"
+                    + "<input type=\"hidden\" name=\"bstep\" value=\"${boardVO.bstep}\">"
+                    + "<input type=\"hidden\" name=\"bindent\" value=\"${boardVO.bindent}\">";
+            operForm.append(str);
+            operForm.attr("action", "/board/replyEditor").attr("method", "get");
             operForm.submit();
         });
 

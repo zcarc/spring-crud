@@ -14,17 +14,21 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4 shadowForm">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Insert Page</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Reply Page</h6>
     </div>
 
     <div class="card-body">
 
         <form role="form" action="/board/insert" method="post">
 
+            <input class="form-control" type="hidden" name="bgroup" value="${boardVO.bgroup}">
+            <input class="form-control" type="hidden" name="bstep" value="${boardVO.bstep}">
+            <input class="form-control" type="hidden" name="bindent" value="${boardVO.bindent}">
+
 
             <div class="form-group">
                 <label>Title</label>
-                <input class="form-control" name="title" id="name">
+                <input class="form-control" name="title" id="name" value="[RE] ">
             </div>
 
             <div class="form-group">
@@ -85,13 +89,12 @@
                 return;
             }
 
-
+            $("form[role='form']").attr("action", "/board/replyEditor").attr("method", "post");
             $("form[role='form']").submit();
 
 
         } else if($(this).attr("type") == "reset"){
             $("form").trigger('reset');
-
         }
 
 

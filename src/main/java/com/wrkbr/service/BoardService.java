@@ -19,5 +19,7 @@ public interface BoardService {
 
     public List<BoardAttachVO> getListAttach(Long bno);
 
+    public void replyInsertSelectKey(BoardVO boardVO);
+
 
 }
