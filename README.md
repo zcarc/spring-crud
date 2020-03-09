@@ -1,5 +1,3 @@
-# wrkbrApp
-
 ### - 개발환경
 - OS: Windows, Amazon Linux AMI
 - Language: Java, JavaScript, HTML, CSS
